@@ -1,6 +1,7 @@
+import User from "../models/User.js"
+
 export default {
     register(authData) {
-        console.log(authData);
-        
+        return User.create(authData)
     }
 }
