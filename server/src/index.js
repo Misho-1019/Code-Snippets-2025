@@ -1,10 +1,21 @@
-import express from "express";
 import dotenv from 'dotenv';
+dotenv.config();
+
+import express from "express";
+import mongoose from "mongoose";
 import routes from "./routes.js";
 
 const app = express();
 
-dotenv.config();
+try {
+    const uri = process.env.MONGO_URI;
+    await mongoose.connect(uri)
+
+    console.log('DB connected successfully!');
+} catch (err) {
+    console.log('Cannot connect!');
+    console.error(err.message);
+}
 
 app.use(routes)
 
