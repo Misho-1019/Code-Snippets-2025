@@ -6,4 +6,6 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Install and set up express
  - [x] Install and set up dotenv
  - [x] Add auth controller
- 
+ - [x] Add route definition of register
+ - [x] 
+
