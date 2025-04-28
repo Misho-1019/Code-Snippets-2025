@@ -1,14 +1,10 @@
 import express from "express";
 import dotenv from 'dotenv';
-import routes from "./routes";
+import routes from "./routes.js";
 
 const app = express();
 
 dotenv.config();
-
-app.get('/', (req, res) => {
-    res.send('It works!')
-})
 
 app.use(routes)
 
