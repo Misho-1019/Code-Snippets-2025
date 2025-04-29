@@ -11,4 +11,6 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Set up mongoose successfully
  - [x] Add User model
  - [x] Hash password on save
+ - [x] Add login functionality with jwt generation
+ - [x] 
 
