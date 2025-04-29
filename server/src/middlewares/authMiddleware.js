@@ -22,4 +22,14 @@ export const isAuth = (req, res, next) => {
     if (!req.user) {
         return res.status(401).json({ message: 'Unauthorized'})
     }
+
+    next();
+}
+
+export const isGuest = (req, res, next) => {
+    if (req.user) {
+        return res.json({ message: 'You are already logged in!'})
+    }
+
+    next()
 }
