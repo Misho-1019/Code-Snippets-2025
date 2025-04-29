@@ -13,4 +13,6 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Hash password on save
  - [x] Add login functionality with jwt generation
  - [x] Add cookie-parser
+ - [x] Sent cookie token on client
+ 
 
