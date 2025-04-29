@@ -15,4 +15,5 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add cookie-parser
  - [x] Sent cookie token on client
  - [x] Add user info to request
+ - [x] Clear user session for invalid auth tokens
 

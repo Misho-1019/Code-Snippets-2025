@@ -17,13 +17,18 @@ authController.post('/login', async (req, res) => {
     try {
         const token = await authService.login(email, password)
         
-        res.cookie('auth', token)
+        res.cookie('auth', token, { httpOnly: true })
         
     } catch (err) {
         console.log(err.message);
     }
 
     res.end();
+})
+
+authController.get('/logout', (req, res) => {
+    res.clearCookie('auth')
+    return res.status(200).json({ message: 'Logout successfully!' })
 })
 
 export default authController;
