@@ -20,6 +20,7 @@ try {
     console.error(err.message);
 }
 
+app.use(express.json())
 app.use(cookieParser())
 app.use(authMiddleware)
 app.use(routes)
