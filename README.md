@@ -19,4 +19,5 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add logout functionality
  - [x] Add route guard for logout
  - [x] Add User model validation
+ - [x] Check if user exists
 

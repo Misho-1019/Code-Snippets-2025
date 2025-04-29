@@ -7,9 +7,12 @@ const authController = Router();
 authController.post('/register', async (req, res) => {
     const authData = req.body;
 
-    await authService.register(authData)
-    
-    res.end();
+    try {
+        await authService.register(authData)
+        res.status(201).json({ message: 'User registered successfully!' })
+    } catch (err) {
+        res.status(400).json({ message: 'Bad request!' })
+    }
 })
 
 authController.post('/login', async (req, res) => {
@@ -21,10 +24,8 @@ authController.post('/login', async (req, res) => {
         res.cookie('auth', token, { httpOnly: true })
         
     } catch (err) {
-        console.log(err.message);
+        res.status(400).json({ message: 'Bad request!' })
     }
-
-    res.end();
 })
 
 authController.get('/logout', isAuth, (req, res) => {
