@@ -11,8 +11,17 @@ export default {
         if (userCount > 0) {
             throw new Error('User already exists!')
         }
-        
-        return User.create(authData)
+
+        const user = await User.create(authData)
+
+        const payload = {
+            id: user.id,
+            email: user.email,
+        }
+
+        const token = jwt.sign(payload, SECRET, { expiresIn: '2h' })
+
+        return token
     },
     async login(email, password) {
         const user = await User.findOne({ email })
@@ -29,7 +38,7 @@ export default {
 
         const payload = {
             id: user.id,
-            email: user.id,
+            email: user.email,
         }
 
         const token = jwt.sign(payload, SECRET, { expiresIn: '2h' })
