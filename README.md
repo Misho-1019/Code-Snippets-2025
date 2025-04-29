@@ -9,4 +9,5 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add route definition of register
  - [x] Add auth service with register
  - [x] Set up mongoose successfully
+ - [x] Add User model
 
