@@ -18,3 +18,7 @@ export default {
     updateSnippet(snippetData, snippetId) {
         return Snippet.findByIdAndUpdate(snippetId, snippetData)
     },
+    deleteSnippet(snippetId) {
+        return Snippet.findByIdAndDelete(snippetId)
+    }
+}

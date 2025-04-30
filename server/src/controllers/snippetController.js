@@ -65,3 +65,24 @@ snippetController.put('/:snippetId', isAuth, async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 })
+
+snippetController.delete('/:snippetId', isAuth, async (req, res) => {
+    const snippetId = req.params.snippetId;
+    const userId = req.user?.id;
+
+    try {
+        const snippet = await snippetService.getOne(snippetId)
+
+        if (snippet.creator.toString() !== userId) {
+            return res.status(403).json({ error: 'Unauthorized!' })
+        }
+
+        await snippetService.deleteSnippet(snippetId)
+
+        res.status(200).json({ message: 'Snippet deleted successfully!' });
+    } catch (err) {
+        res.status(404).json({ error: err.message })
+    }
+})
+
+export default snippetController;
