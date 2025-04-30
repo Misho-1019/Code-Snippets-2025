@@ -1,13 +1,27 @@
 import { Schema, Types, model } from "mongoose";
 
 const snippetSchema = new Schema({
-    title: String,
-    description: String,
-    code: String,
-    language: String,
+    title: {
+        type: String,
+        required: [true, 'Title is required!'],
+        minLength: [3, 'Title must be at least 3 characters long'],
+    },
+    description: {
+        type: String,
+        required: [true, 'Description is required!'],
+    },
+    code: {
+        type: String,
+        required: [true, 'Code is required!'],
+    },
+    language: {
+        type: String,
+        required: [true, 'Language is required!'],
+    },
     creator: {
         type: Types.ObjectId,
         ref: 'User',
+        required: [true, 'Creator is required!']
     },
     createdAt: {
         type: Date,
