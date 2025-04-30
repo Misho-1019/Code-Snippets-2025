@@ -1,6 +1,7 @@
 import { Router } from "express";
 import snippetService from "../services/snippetService.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
+import { body, validationResult } from "express-validator";
 
 const snippetController = Router();
 
@@ -31,7 +32,18 @@ snippetController.get('/:snippetId', async (req, res) => {
     }
 })
 
-snippetController.post('/', isAuth, async (req, res) => {
+snippetController.post('/', isAuth, [
+    body('title').notEmpty().withMessage('Title is required').isString().withMessage('Title must be a string'),
+    body('description').notEmpty().withMessage('Description is required').isString().withMessage('Description must be a string'),
+    body('code').notEmpty().withMessage('Code is required').isString().withMessage('Code must be a string'),
+    body('language').notEmpty().withMessage('Language is required').isString().withMessage('Language must be a string')
+], async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+
     const snippetData = req.body;
     const creatorId = req.user?.id;
 
@@ -45,7 +57,18 @@ snippetController.post('/', isAuth, async (req, res) => {
     }
 })
 
-snippetController.put('/:snippetId', isAuth, async (req, res) => {
+snippetController.put('/:snippetId', isAuth, [
+    body('title').optional().isString().withMessage('Title must be a string'),
+    body('description').optional().isString().withMessage('Description must be a string'),
+    body('code').optional().isString().withMessage('Code must be a string'),
+    body('language').optional().isString().withMessage('Language must be a string'),
+], async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+    
     const snippetId = req.params.snippetId;
     const snippetData = req.body;
     const userId = req.user.id;
