@@ -7,3 +7,11 @@ export default {
     getOne(snippetId) {
         return Snippet.findById(snippetId)
     },
+    createSnippet(snippetData, creatorId) {
+        const result = Snippet.create({
+            ...snippetData,
+            creator: creatorId,
+        })
+
+        return result;
+    },

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import snippetService from "../services/snippetService.js";
+import { isAuth } from "../middlewares/authMiddleware.js";
 
 const snippetController = Router();
 
@@ -23,5 +24,19 @@ snippetController.get('/:snippetId', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(404).json({ error: err.message })
+    }
+})
+
+snippetController.post('/', isAuth, async (req, res) => {
+    const snippetData = req.body;
+    const creatorId = req.user?.id;
+
+    try {
+        const newSnippet = await snippetService.createSnippet(snippetData, creatorId)
+
+        res.status(201).json(newSnippet)
+    } catch (err) {
+        console.error(err.message);
+        res.status(400).json({ error: err.message })
     }
 })
