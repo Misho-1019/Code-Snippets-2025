@@ -40,3 +40,28 @@ snippetController.post('/', isAuth, async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 })
+
+snippetController.put('/:snippetId', isAuth, async (req, res) => {
+    const snippetId = req.params.snippetId;
+    const snippetData = req.body;
+    const userId = req.user.id;
+
+    try {
+        const snippet = await snippetService.getOne(snippetId)
+
+        if (!snippet) {
+            return res.status(404).json({ error: 'Snippet not found!' })
+        }
+
+        if (snippet.creator.toString() !== userId) {
+            return res.status(403).json({ error: 'Unauthorized!' })
+        }
+
+        const updatedSnippet = await snippetService.updateSnippet(snippetData, snippetId)
+
+        res.status(200).json(updatedSnippet)
+    } catch (err) {
+        console.error(err.message);
+        res.status(400).json({ error: err.message })
+    }
+})

@@ -15,3 +15,6 @@ export default {
 
         return result;
     },
+    updateSnippet(snippetData, snippetId) {
+        return Snippet.findByIdAndUpdate(snippetId, snippetData)
+    },
