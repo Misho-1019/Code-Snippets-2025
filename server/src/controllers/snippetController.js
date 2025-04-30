@@ -13,3 +13,15 @@ snippetController.get('/', async (req, res) => {
     }
 })
 
+snippetController.get('/:snippetId', async (req, res) => {
+    const snippetId = req.params.snippetId;
+
+    try {
+        const snippet = await snippetService.getOne(snippetId)
+
+        res.status(200).json(snippet)
+    } catch (err) {
+        console.error(err.message);
+        res.status(404).json({ error: err.message })
+    }
+})
