@@ -6,10 +6,21 @@ import { body, validationResult } from "express-validator";
 const snippetController = Router();
 
 snippetController.get('/', async (req, res) => {
-    try {
-        const snippets = await snippetService.getAll();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
 
-        res.status(200).json(snippets)
+    try {
+        const [snippets, totalCount] = await Promise.all([
+            snippetService.getAll(page, limit),
+            snippetService.getTotalCount()
+        ])
+
+        res.status(200).json({
+            snippets,
+            totalPages: Math.ceil(totalCount / limit),
+            currentPage: page,
+            totalSnippets: totalCount,
+        })
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch snippets!' })
     }
