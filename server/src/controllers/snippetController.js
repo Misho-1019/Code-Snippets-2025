@@ -20,10 +20,14 @@ snippetController.get('/:snippetId', async (req, res) => {
     try {
         const snippet = await snippetService.getOne(snippetId)
 
+        if (!snippet) {
+            res.status(404).json({ error: 'Snippet not found!' })
+        }
+
         res.status(200).json(snippet)
     } catch (err) {
         console.error(err.message);
-        res.status(404).json({ error: err.message })
+        res.status(500).json({ error: 'Failed to fetch snippet!' })
     }
 })
 
