@@ -22,4 +22,7 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Check if user exists
  - [x] Add error handling
  - [x] Add route guards for login and register
+ - [x] Parse incoming json
+2. React Frontend Structure
+ - [x] 
 
