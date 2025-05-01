@@ -1,9 +1,18 @@
 import './App.css'
+import Header from './components/header/Header'
+import Home from './components/home/Home'
+import Login from './components/login/Login'
+import Register from './components/register/Register'
 
 function App() {
     return (
         <>
-            <h1>Code Snippet Platform</h1>
+            <div>
+                <Header />
+                {/* <Home /> */}
+                {/* <Login /> */}
+                <Register />
+            </div>
         </>
     )
 }
