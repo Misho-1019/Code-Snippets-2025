@@ -1,13 +1,15 @@
 import Snippet from "../models/Snippet.js"
 
 export default {
-    getAll(page = 1, limit = 10) {
+    getAll(page = 1, limit = 10, filter = {}) {
         const skip = (page - 1) * limit;
 
-        return Snippet.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit)
+        const query = Snippet.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+
+        return query;
     },
-    getTotalCount() {
-        return Snippet.countDocuments()
+    getTotalCount(filter = {}) {
+        return Snippet.countDocuments(filter)
     },
     getOne(snippetId) {
         return Snippet.findById(snippetId)

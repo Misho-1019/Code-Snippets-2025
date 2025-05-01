@@ -9,10 +9,12 @@ snippetController.get('/', async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
+    const { title, description, langauge } = req.query
+
     try {
         const [snippets, totalCount] = await Promise.all([
-            snippetService.getAll(page, limit),
-            snippetService.getTotalCount()
+            snippetService.getAll(page, limit, { title, description, langauge }),
+            snippetService.getTotalCount({ title, description, langauge })
         ])
 
         res.status(200).json({
