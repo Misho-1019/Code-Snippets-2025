@@ -32,5 +32,6 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add header links
  - [x] Add auth pages and routes
  - [x] Add abstract requester
+ - [x] Add login handler
  - [x] 
 
