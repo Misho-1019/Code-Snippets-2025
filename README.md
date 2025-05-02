@@ -24,5 +24,12 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add route guards for login and register
  - [x] Parse incoming json
 2. React Frontend Structure
+ - [x] Install React Vite ('npm create vite@latest . -- --template react')
+ - [x] Clean up project
+ - [x] Install tailwind css(optional)
+ - [x] Extract components
+ - [x] Add react router
+ - [x] Add header links
+ - [x] Add auth pages and routes
  - [x] 
 
