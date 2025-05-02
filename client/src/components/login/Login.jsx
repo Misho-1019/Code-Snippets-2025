@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 export default function Login() {
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
@@ -16,6 +18,12 @@ export default function Login() {
                         Login
                     </button>
                 </form>
+                <p className="text-sm text-center text-gray-600 mt-6">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="text-indigo-600 hover:underline font-medium">
+                        Register here
+                    </Link>
+                </p>
             </div>
         </main>
     );
