@@ -1,25 +1,25 @@
 import { useActionState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useLogin } from "../../api/authApi";
 
 export default function Login({
     onLogin,
 }) {
     const navigate = useNavigate();
+    const { login } = useLogin();
 
-    const loginHandler = (previousState, formData) => {
+    const loginHandler = async (_, formData) => {
         const values = Object.fromEntries(formData)
 
-        onLogin(values.email)
+        const authData = await login(values.email, values.password)
 
-        return values
+        onLogin(authData)
 
-        // navigate('/')
+        navigate('/')
     }
 
-    const [values, loginAction, isPending] = useActionState(loginHandler, { email: '', password: '' })
+    const [_, loginAction, isPending] = useActionState(loginHandler, { email: '', password: '' })
 
-    console.log(values);
-    
     return (
         <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
             <div className="w-full max-w-md bg-white p-8 shadow-md rounded-2xl">
