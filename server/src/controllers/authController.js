@@ -8,10 +8,10 @@ authController.post('/register', isGuest, async (req, res) => {
     const authData = req.body;
 
     try {
-        const token = await authService.register(authData)
-        res.cookie('auth', token, { httpOnly: true })
+        const result = await authService.register(authData)
+        res.cookie('auth', result.token, { httpOnly: true })
 
-        res.status(201).json({ message: 'User registered successfully!' })
+        res.status(201).json(result)
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
@@ -21,13 +21,13 @@ authController.post('/login', isGuest, async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const token = await authService.login(email, password)
+        const result = await authService.login(email, password)
         
-        res.cookie('auth', token, { httpOnly: true })
+        res.cookie('auth', result.token, { httpOnly: true })
         
-        res.status(200).json({ message: 'User login successfully!' })
+        res.status(200).json(result)
     } catch (err) {
-        res.status(400).json({ message: 'Bad request!' })
+        res.status(400).json({ message: err.message })
     }
 })
 

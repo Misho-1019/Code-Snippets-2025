@@ -21,7 +21,12 @@ export default {
 
         const token = jwt.sign(payload, SECRET, { expiresIn: '2h' })
 
-        return token
+        return {
+            token,
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+        };
     },
     async login(email, password) {
         const user = await User.findOne({ email })
@@ -43,6 +48,11 @@ export default {
 
         const token = jwt.sign(payload, SECRET, { expiresIn: '2h' })
         
-        return token
+        return {
+            token,
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+        };
     }
 }
