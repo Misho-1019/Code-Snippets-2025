@@ -21,15 +21,17 @@ function App() {
 
     return (
         <>
-            <UserContext.Provider value={{ ...authData, userLoginHandler, userLogoutHandler }}>
-                <Header />
+            <UserContext.Provider value={{...authData, userLoginHandler, userLogoutHandler}}>
+                <div>
+                    <Header />
 
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='/logout' element={<Logout />} />
-                </Routes>
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/register' element={<Register />} />
+                        <Route path='/logout' element={<Logout />} />
+                    </Routes>
+                </div>
             </UserContext.Provider>
         </>
     )

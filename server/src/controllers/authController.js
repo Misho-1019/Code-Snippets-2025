@@ -13,7 +13,7 @@ authController.post('/register', isGuest, async (req, res) => {
 
         res.status(201).json(result)
     } catch (err) {
-        res.status(400).json({ message: err.message }).end()
+        res.status(400).json({ message: err.message })
     }
 })
 
@@ -22,23 +22,18 @@ authController.post('/login', isGuest, async (req, res) => {
 
     try {
         const result = await authService.login(email, password)
-
+        
         res.cookie('auth', result.token, { httpOnly: true })
-
+        
         res.status(200).json(result)
     } catch (err) {
-        res.status(400).json({ message: err.message }).end()
+        res.status(400).json({ message: err.message })
     }
 })
 
 authController.get('/logout', isAuth, (req, res) => {
-    try {
-        res.clearCookie('auth')
-        return res.status(200).json({ message: 'Logout successfully!' })
-    } catch (error) {
-        console.log(error.message);
-        res.status(403).json({ message: error.message })
-    }
+    res.clearCookie('auth')
+    return res.status(200).json({ message: 'Logout successfully!' })
 })
 
 export default authController;

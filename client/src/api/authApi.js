@@ -5,7 +5,6 @@ import { UserContext } from "../context/UserContext";
 const baseUrl = 'http://localhost:3030/auth'
 
 export const useLogin = () => {
-    const { token } = useContext(UserContext)
     const abortRef = useRef(new AbortController());
 
     const login = async (email, password) => {
