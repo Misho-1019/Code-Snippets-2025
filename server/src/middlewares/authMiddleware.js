@@ -29,7 +29,7 @@ export const isAuth = (req, res, next) => {
 
 export const isGuest = (req, res, next) => {
     if (req.user) {
-        return res.json({ message: 'You are already logged in!'})
+        return res.status(403).json({ message: 'You are already logged in!' });
     }
 
     next()
