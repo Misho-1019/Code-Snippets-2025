@@ -4,24 +4,14 @@ import Header from './components/header/Header'
 import Home from './components/home/Home'
 import Login from './components/login/Login'
 import Register from './components/register/Register'
-import { UserContext } from './context/UserContext'
 import Logout from './components/logout/Logout'
-import usePersistedState from './hooks/usePersistedState'
+import { UserProvider } from './providers/UserProvider'
 
 function App() {
-    const [authData, setAuthData] = usePersistedState('auth', {})
-
-    const userLoginHandler = (resultData) => {
-        setAuthData(resultData)
-    }
-
-    const userLogoutHandler = () => {
-        setAuthData({})
-    }
 
     return (
         <>
-            <UserContext.Provider value={{ ...authData, userLoginHandler, userLogoutHandler }}>
+            <UserProvider>
                 <Header />
 
                 <Routes>
@@ -30,7 +20,7 @@ function App() {
                     <Route path='/register' element={<Register />} />
                     <Route path='/logout' element={<Logout />} />
                 </Routes>
-            </UserContext.Provider>
+            </UserProvider>
         </>
     )
 }
