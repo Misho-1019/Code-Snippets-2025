@@ -10,6 +10,9 @@ export default {
 
         return snippets;
     },
+    getOne(snippetId) {
+        return request.get(`${baseUrl}/${snippetId}`)
+    },
     create(snippetData) {
         return request.post(baseUrl, snippetData)
     },

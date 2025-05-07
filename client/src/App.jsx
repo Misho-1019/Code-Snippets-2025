@@ -24,7 +24,7 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/snippets' element={<SnippetList />} />
-                    <Route path='/snippets/details' element={<SnippetDetails />} />
+                    <Route path='/snippets/:snippetId/details' element={<SnippetDetails />} />
 
                     <Route element={<AuthGuard />}>
                         <Route path='/logout' element={<Logout />} />

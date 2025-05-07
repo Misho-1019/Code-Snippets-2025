@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 export default function ItemCatalog({
     _id,
     title,
@@ -22,9 +24,9 @@ export default function ItemCatalog({
                 </pre>
             </div>
             <div className="pt-4 flex justify-end gap-2">
-                <button className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                <Link to={`/snippets/${_id}/details`} className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
                     Details
-                </button>
+                </Link>
             </div>
         </div>
     )
