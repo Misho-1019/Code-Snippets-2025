@@ -1,17 +1,16 @@
+import request from "../utils/request";
+
 const baseUrl = 'http://localhost:3030/snippets'
 
 export default {
-    async create(snippetData) {
-        const response = await fetch(baseUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(snippetData),
-        })
+    async getAll() {
+        const result = await request.get(baseUrl)
 
-        const result = await response.json();
+        const snippets = Object.values(result)
 
-        return result
+        return snippets;
+    },
+    create(snippetData) {
+        return request.post(baseUrl, snippetData)
     },
 }

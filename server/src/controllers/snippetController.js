@@ -51,7 +51,7 @@ snippetController.get('/:snippetId', async (req, res) => {
     }
 })
 
-snippetController.post('/', isAuth, [
+snippetController.post('/create', isAuth, [
     body('title').notEmpty().withMessage('Title is required').isString().withMessage('Title must be a string'),
     body('description').notEmpty().withMessage('Description is required').isString().withMessage('Description must be a string'),
     body('code').notEmpty().withMessage('Code is required').isString().withMessage('Code must be a string'),

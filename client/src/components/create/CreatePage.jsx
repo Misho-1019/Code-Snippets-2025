@@ -1,4 +1,17 @@
+import { useNavigate } from "react-router";
+import snippetService from "../../services/snippetService";
+
 export default function CreateSnippet() {
+    const navigate = useNavigate();
+    
+    const submitAction = async (formData) => {
+        const snippetData = Object.fromEntries(formData)
+
+        await snippetService.create(snippetData)
+
+        navigate('/snippets')
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
@@ -6,7 +19,7 @@ export default function CreateSnippet() {
                     Create New Snippet
                 </h2>
 
-                <form className="space-y-6">
+                <form className="space-y-6" action={submitAction}>
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
                             Title

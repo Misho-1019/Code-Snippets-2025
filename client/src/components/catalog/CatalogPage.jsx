@@ -1,22 +1,14 @@
-export default function SnippetList() {
-    // Placeholder dummy data
-    const snippets = [
-        {
-            id: 1,
-            title: "Array Filtering in JavaScript",
-            language: "JavaScript",
-            description: "How to filter arrays using the filter() method.",
-            code: "const result = array.filter(item => item.active);",
-        },
-        {
-            id: 2,
-            title: "Basic Python Loop",
-            language: "Python",
-            description: "A simple for loop example in Python.",
-            code: "for i in range(5):\n    print(i)",
-        },
-    ];
+import { useEffect, useState } from "react";
+import snippetService from "../../services/snippetService";
 
+export default function SnippetList() {
+    const [snippets, setSnippets] = useState([])
+
+    useEffect(() => {
+        snippetService.getAll()
+            .then(setSnippets)
+    }, [])
+    
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
