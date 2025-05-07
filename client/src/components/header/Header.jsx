@@ -12,10 +12,11 @@ export default function Header() {
 
                 <nav className="flex items-center space-x-6">
                     <Link to='/' className="hover:text-gray-200">Home</Link>
+                    <Link to="/snippets" className="hover:text-gray-200">Snippets</Link>
 
                     {email ? (
                         <>
-                            <Link to="/snippets" className="hover:text-gray-200">Snippets</Link>
+                            <Link to="/snippets/create" className="hover:text-gray-200">Create Snippet</Link>
                             <Link to="/logout" className="hover:text-gray-200">Logout</Link>
                         </>
                     ) : (
