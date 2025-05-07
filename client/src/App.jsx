@@ -8,6 +8,7 @@ import Logout from './components/logout/Logout'
 import { UserProvider } from './providers/UserProvider'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
+import { ToastContainer } from "react-toastify";
 
 function App() {
 
@@ -26,6 +27,8 @@ function App() {
                         <Route path='/register' element={<Register />} />
                     </Route>
                 </Routes>
+
+                <ToastContainer />
             </UserProvider>
         </>
     )
