@@ -18,7 +18,12 @@ export default function SnippetList() {
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {snippets.map(snippet => <ItemCatalog key={snippet._id} {...snippet}/>)}
+                    {snippets.length > 0
+                        ? snippets.map(snippet => <ItemCatalog key={snippet._id} {...snippet} />)
+                        : <h3 className="text-center text-lg text-gray-600 font-medium mt-10">
+                            No snippets yet
+                          </h3>
+                    }
                 </div>
 
             </div>
