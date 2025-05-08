@@ -29,7 +29,7 @@ function App() {
                     <Route element={<AuthGuard />}>
                         <Route path='/logout' element={<Logout />} />
                         <Route path='/snippets/create' element={<CreateSnippet />} />
-                        <Route path='/snippets/edit' element={<EditSnippet />} />
+                        <Route path='/snippets/:snippetId/edit' element={<EditSnippet />} />
                     </Route>
 
                     <Route element={<GuestGuard />}>

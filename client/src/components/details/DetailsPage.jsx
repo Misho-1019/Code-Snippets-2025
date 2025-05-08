@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import snippetService from "../../services/snippetService";
 import useAuth from "../../hooks/useAuth";
 
@@ -53,9 +53,9 @@ export default function SnippetDetails() {
             </div>
 
             <div className="flex justify-end gap-2">
-                <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
                     Edit
-                </button>
+                </Link>
                 <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
                     Delete
                 </button>
