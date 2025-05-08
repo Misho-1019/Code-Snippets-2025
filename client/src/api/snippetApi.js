@@ -39,6 +39,19 @@ export const useSnippets = () => {
     }
 }
 
+export const useSnippet = (snippetId) => {
+    const [snippet, setSnippet] = useState({})
+
+    useEffect(() => {
+        request.get(`${baseUrl}/${snippetId}`)
+            .then(setSnippet)
+    }, [snippetId])
+
+    return {
+        snippet,
+    }
+}
+
 export const useCreateSnippet = () => {
     const { token } = useUserContext()
 

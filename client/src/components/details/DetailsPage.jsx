@@ -1,18 +1,13 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import snippetService from "../../services/snippetService";
 import useAuth from "../../hooks/useAuth";
+import { useSnippet } from "../../api/snippetApi";
 
 export default function SnippetDetails() {
-    const [snippet, setSnippet] = useState({});
     const { snippetId } = useParams();
+    const { snippet } = useSnippet(snippetId)
     const { email } = useAuth()
     const navigate = useNavigate()
-
-    useEffect(() => {
-        snippetService.getOne(snippetId)
-            .then(setSnippet)
-    }, [snippetId])
 
     const snippetDeleteClickHandler = async () => {
         const hasConfirm = confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
