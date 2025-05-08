@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import snippetService from "../../services/snippetService";
+import { useEditSnippet, useSnippet } from "../../api/snippetApi";
 
 export default function EditSnippet() {
     const { snippetId } = useParams();
-    const [snippet, setSnippet] = useState({})
+    const { snippet } = useSnippet(snippetId)
+    const { edit } = useEditSnippet()
     const navigate = useNavigate();
-
-    useEffect(() => {
-        snippetService.getOne(snippetId)
-            .then(setSnippet)
-    }, [snippetId])
 
     const formAction = async (formData) => {
         const snippetData = Object.fromEntries(formData)
 
-        await snippetService.edit(snippetId, snippetData)
+        await edit(snippetId, snippetData)
 
         navigate(`/snippets/${snippetId}/details`)
     }

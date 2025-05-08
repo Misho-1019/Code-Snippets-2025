@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useUserContext } from "../context/UserContext"
 import request from "../utils/request"
+import useAuth from "../hooks/useAuth"
 
 const baseUrl = 'http://localhost:3030/snippets'
 
@@ -53,18 +54,34 @@ export const useSnippet = (snippetId) => {
 }
 
 export const useCreateSnippet = () => {
-    const { token } = useUserContext()
+    const { request } = useAuth()
 
-    const options = {
-        headers: {
-            'X-Authorization': token,
-        }
-    }
-
-    const create = async (snippetData) => 
-        await request.post(`${baseUrl}/create`, snippetData, options)
+    const create = (snippetData) => 
+        request.post(`${baseUrl}/create`, snippetData)
 
     return {
         create,
+    }
+}
+
+export const useEditSnippet = () => {
+    const { request } = useAuth();
+
+    const edit = (snippetId, snippetData) => 
+        request.put(`${baseUrl}/${snippetId}`, {...snippetData, _id: snippetId})
+
+    return {
+        edit,
+    }
+}
+
+export const useDeleteSnippet = () => {
+    const { request } = useAuth()
+
+    const deleteSnippet = (snippetId) =>
+        request.delete(`${baseUrl}/${snippetId}`)
+
+    return {
+        deleteSnippet,
     }
 }

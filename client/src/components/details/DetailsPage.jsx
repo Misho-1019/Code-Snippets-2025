@@ -1,11 +1,11 @@
 import { Link, useNavigate, useParams } from "react-router";
-import snippetService from "../../services/snippetService";
 import useAuth from "../../hooks/useAuth";
-import { useSnippet } from "../../api/snippetApi";
+import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 
 export default function SnippetDetails() {
     const { snippetId } = useParams();
     const { snippet } = useSnippet(snippetId)
+    const { deleteSnippet } = useDeleteSnippet()
     const { email } = useAuth()
     const navigate = useNavigate()
 
@@ -14,7 +14,7 @@ export default function SnippetDetails() {
 
         if (!hasConfirm) return;
 
-        await snippetService.delete(snippetId)
+        await deleteSnippet(snippetId)
 
         navigate('/snippets')
     }
