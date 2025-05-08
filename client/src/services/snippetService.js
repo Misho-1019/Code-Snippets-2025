@@ -16,4 +16,7 @@ export default {
     create(snippetData) {
         return request.post(baseUrl, snippetData)
     },
+    delete(snippetId) {
+        return request.delete(`${baseUrl}/${snippetId}`)
+    },
 }

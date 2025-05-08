@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import snippetService from "../../services/snippetService";
 import useAuth from "../../hooks/useAuth";
 
@@ -7,12 +7,23 @@ export default function SnippetDetails() {
     const [snippet, setSnippet] = useState({});
     const { snippetId } = useParams();
     const { email } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         snippetService.getOne(snippetId)
             .then(setSnippet)
     }, [snippetId])
-    
+
+    const snippetDeleteClickHandler = async () => {
+        const hasConfirm = confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
+
+        if (!hasConfirm) return;
+
+        await snippetService.delete(snippetId)
+
+        navigate('/snippets')
+    }
+
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
             <div className="border-b pb-4 mb-4">
@@ -45,7 +56,7 @@ export default function SnippetDetails() {
                 <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
                     Edit
                 </button>
-                <button className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
+                <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
                     Delete
                 </button>
             </div>
