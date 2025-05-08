@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { useUserContext } from "../context/UserContext"
 import request from "../utils/request"
 
@@ -23,6 +24,19 @@ export default {
     delete(snippetId) {
         return request.delete(`${baseUrl}/${snippetId}`)
     },
+}
+
+export const useSnippets = () => {
+    const [snippets, setSnippets] = useState([])
+
+    useEffect(() => {
+        request.get(baseUrl)
+            .then(setSnippets)
+    }, [])
+
+    return {
+        snippets,
+    }
 }
 
 export const useCreateSnippet = () => {

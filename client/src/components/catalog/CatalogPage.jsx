@@ -1,14 +1,8 @@
-import { useEffect, useState } from "react";
-import snippetService from "../../services/snippetService";
 import ItemCatalog from "./item/ItemCatalog";
+import { useSnippets } from "../../api/snippetApi";
 
 export default function SnippetList() {
-    const [snippets, setSnippets] = useState([])
-
-    useEffect(() => {
-        snippetService.getAll()
-            .then(setSnippets)
-    }, [])
+    const { snippets } = useSnippets()
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -17,15 +11,19 @@ export default function SnippetList() {
                     Your Snippets
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {snippets.length > 0
-                        ? snippets.map(snippet => <ItemCatalog key={snippet._id} {...snippet} />)
-                        : <h3 className="text-center text-lg text-gray-600 font-medium mt-10">
+                {snippets.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {snippets.map(snippet => (
+                            <ItemCatalog key={snippet._id} {...snippet} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex justify-center items-center h-64 bg-white rounded-xl shadow-inner">
+                        <h3 className="text-xl text-gray-500 font-semibold">
                             No snippets yet
-                          </h3>
-                    }
-                </div>
-
+                        </h3>
+                    </div>
+                )}
             </div>
         </div>
     );
