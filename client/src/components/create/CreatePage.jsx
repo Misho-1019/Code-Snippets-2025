@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router";
-import snippetService from "../../services/snippetService";
+import { useCreateSnippet } from "../../api/snippetApi";
 
 export default function CreateSnippet() {
     const navigate = useNavigate();
+    const { create } = useCreateSnippet()
     
     const submitAction = async (formData) => {
         const snippetData = Object.fromEntries(formData)
 
-        await snippetService.create(snippetData)
+        await create(snippetData)
 
         navigate('/snippets')
     }
