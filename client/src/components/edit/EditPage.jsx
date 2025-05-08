@@ -1,21 +1,30 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import snippetService from "../../services/snippetService";
 
 export default function EditSnippet() {
     const { snippetId } = useParams();
     const [snippet, setSnippet] = useState({})
+    const navigate = useNavigate();
 
     useEffect(() => {
         snippetService.getOne(snippetId)
             .then(setSnippet)
     }, [snippetId])
 
+    const formAction = async (formData) => {
+        const snippetData = Object.fromEntries(formData)
+
+        await snippetService.edit(snippetId, snippetData)
+
+        navigate(`/snippets/${snippetId}/details`)
+    }
+
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-bold text-indigo-700 mb-6">Edit Snippet</h2>
 
-            <form className="space-y-5">
+            <form className="space-y-5" action={formAction}>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
                     <input
