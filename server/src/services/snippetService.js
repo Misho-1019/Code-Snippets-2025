@@ -11,6 +11,14 @@ export default {
     getTotalCount(filter = {}) {
         return Snippet.countDocuments(filter)
     },
+    getLatest({ sortBy, order, pageSize }) {
+        const sortOrder = order === 'desc' ? -1 : 1;
+
+        return Snippet.find()
+            .sort({ [sortBy]: sortOrder })
+            .limit(Number(pageSize))
+            
+    },
     getOne(snippetId) {
         return Snippet.findById(snippetId)
     },

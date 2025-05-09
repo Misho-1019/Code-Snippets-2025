@@ -34,6 +34,23 @@ snippetController.get('/', async (req, res) => {
     }
 })
 
+snippetController.get('/latest', async (req, res) => {
+    const { sortBy = 'createdAt', order = 'desc', pageSize = 3 } = req.query;
+
+    try {
+        const snippets = await snippetService.getLatest({ sortBy, order, pageSize })
+
+        if (!snippets || snippets.length === 0) {
+            return res.status(404).json({ error: 'No snippets found!' })
+        }
+
+        res.status(200).json(snippets)
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server error while fetching latest snippets!' })
+    }
+})
+
 snippetController.get('/:snippetId', async (req, res) => {
     const snippetId = req.params.snippetId;
 
