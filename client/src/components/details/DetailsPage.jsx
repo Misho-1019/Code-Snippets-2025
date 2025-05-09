@@ -3,11 +3,11 @@ import useAuth from "../../hooks/useAuth";
 import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 
 export default function SnippetDetails() {
+    const navigate = useNavigate()
+    const { email, userId } = useAuth()
     const { snippetId } = useParams();
     const { snippet } = useSnippet(snippetId)
     const { deleteSnippet } = useDeleteSnippet()
-    const { email } = useAuth()
-    const navigate = useNavigate()
 
     const snippetDeleteClickHandler = async () => {
         const hasConfirm = confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
@@ -18,6 +18,8 @@ export default function SnippetDetails() {
 
         navigate('/snippets')
     }
+
+    const isOwner = userId === snippet.creator
 
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
@@ -47,14 +49,16 @@ export default function SnippetDetails() {
                 </pre>
             </div>
 
-            <div className="flex justify-end gap-2">
-                <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
-                    Edit
-                </Link>
-                <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
-                    Delete
-                </button>
-            </div>
+            {isOwner && (
+                <div className="flex justify-end gap-2">
+                    <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                        Edit
+                    </Link>
+                    <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
+                        Delete
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
