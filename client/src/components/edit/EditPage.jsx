@@ -24,7 +24,7 @@ export default function EditSnippet() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
                     <input
                         type="text"
-                        placeholder="Enter snippet title"
+                        name="title"
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         defaultValue={snippet.title}
                     />
@@ -34,7 +34,7 @@ export default function EditSnippet() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea
                         rows="3"
-                        placeholder="Brief description of the snippet"
+                        name="description"
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         defaultValue={snippet.description}
                     ></textarea>
@@ -44,7 +44,7 @@ export default function EditSnippet() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
                     <textarea
                         rows="6"
-                        placeholder="Paste your code here"
+                        name="code"
                         className="w-full font-mono border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         defaultValue={snippet.code}
                     ></textarea>
@@ -54,7 +54,7 @@ export default function EditSnippet() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
                     <input
                         type="text"
-                        placeholder="e.g. JavaScript"
+                        name="language"
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         defaultValue={snippet.language}
                     />
