@@ -1,38 +1,15 @@
 import { useEffect, useState } from "react"
-import { useUserContext } from "../context/UserContext"
 import request from "../utils/request"
 import useAuth from "../hooks/useAuth"
 
 const baseUrl = 'http://localhost:3030/snippets'
-
-export default {
-    async getAll() {
-        const result = await request.get(baseUrl)
-
-        const snippets = Object.values(result)
-
-        return snippets;
-    },
-    getOne(snippetId) {
-        return request.get(`${baseUrl}/${snippetId}`)
-    },
-    create(snippetData) {
-        return request.post(baseUrl, snippetData)
-    },
-    edit(snippetId, snippetData) {
-        return request.put(`${baseUrl}/${snippetId}`, {...snippetData, _id: snippetId})
-    },
-    delete(snippetId) {
-        return request.delete(`${baseUrl}/${snippetId}`)
-    },
-}
 
 export const useSnippets = () => {
     const [snippets, setSnippets] = useState([])
 
     useEffect(() => {
         request.get(baseUrl)
-            .then(setSnippets)
+            .then(res => setSnippets(res.snippets))
     }, [])
 
     return {
