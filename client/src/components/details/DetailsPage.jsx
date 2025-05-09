@@ -4,7 +4,7 @@ import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
-    const { email, userId } = useAuth()
+    const { userId } = useAuth()
     const { snippetId } = useParams();
     const { snippet } = useSnippet(snippetId)
     const { deleteSnippet } = useDeleteSnippet()
@@ -25,7 +25,6 @@ export default function SnippetDetails() {
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
             <div className="border-b pb-4 mb-4">
                 <h2 className="text-3xl font-bold text-indigo-700">{snippet.title}</h2>
-                <p className="text-gray-500 mt-1">By <span className="font-medium text-gray-700">{email}</span></p>
             </div>
 
             <div className="mb-4">
@@ -44,9 +43,10 @@ export default function SnippetDetails() {
 
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Code</h3>
-                <pre className="bg-gray-100 rounded-md p-4 text-sm overflow-x-auto text-gray-800">
+                <pre className="bg-indigo-100 border border-indigo-200 rounded-md p-4 text-sm overflow-x-auto text-gray-800">
                     {snippet.code}
                 </pre>
+
             </div>
 
             {isOwner && (
