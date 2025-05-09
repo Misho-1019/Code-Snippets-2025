@@ -1,11 +1,13 @@
-import { useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { useEditSnippet, useSnippet } from "../../api/snippetApi";
+import useAuth from "../../hooks/useAuth";
 
 export default function EditSnippet() {
-    const { snippetId } = useParams();
-    const { snippet } = useSnippet(snippetId)
-    const { edit } = useEditSnippet()
     const navigate = useNavigate();
+    const { userId } = useAuth()
+    const { snippetId } = useParams();
+    const { snippet, isLoading, error } = useSnippet(snippetId)
+    const { edit } = useEditSnippet()
 
     const formAction = async (formData) => {
         const snippetData = Object.fromEntries(formData)
@@ -15,6 +17,18 @@ export default function EditSnippet() {
         navigate(`/snippets/${snippetId}/details`)
     }
 
+    if (isLoading) return <div>Loading...</div>
+
+    if (error || !snippet) return <div>Error loading snippet.</div>
+
+    const isOwner = userId === snippet.creator
+    console.log(snippet.creator);
+    
+
+    if (!isOwner) {
+        return <Navigate to='/snippets' />
+    }
+    
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-bold text-indigo-700 mb-6">Edit Snippet</h2>

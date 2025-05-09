@@ -19,14 +19,28 @@ export const useSnippets = () => {
 
 export const useSnippet = (snippetId) => {
     const [snippet, setSnippet] = useState({})
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
+        setIsLoading(true)
+        setError(null)
+
         request.get(`${baseUrl}/${snippetId}`)
-            .then(setSnippet)
+            .then(data => {
+                setSnippet(data)
+                setIsLoading(false)
+            })
+            .catch(err => {
+                setError(err)
+                setIsLoading(false)
+            })
     }, [snippetId])
 
     return {
         snippet,
+        isLoading,
+        error,
     }
 }
 
