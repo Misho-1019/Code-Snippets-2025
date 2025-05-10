@@ -1,6 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { useEditSnippet, useSnippet } from "../../api/snippetApi";
 import useAuth from "../../hooks/useAuth";
+import { showToast } from "../../utils/toastUtils";
 
 export default function EditSnippet() {
     const navigate = useNavigate();
@@ -10,11 +11,17 @@ export default function EditSnippet() {
     const { edit } = useEditSnippet()
 
     const formAction = async (formData) => {
-        const snippetData = Object.fromEntries(formData)
-
-        await edit(snippetId, snippetData)
-
-        navigate(`/snippets/${snippetId}/details`)
+        try {
+            const snippetData = Object.fromEntries(formData)
+            
+            await edit(snippetId, snippetData)
+            
+            showToast('Successfully edited!', 'success')
+            
+            navigate(`/snippets/${snippetId}/details`)
+        } catch (error) {
+            showToast(error.message, 'error')
+        }
     }
 
     if (isLoading) return <div>Loading...</div>

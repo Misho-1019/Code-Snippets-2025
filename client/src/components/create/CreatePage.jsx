@@ -1,16 +1,23 @@
 import { useNavigate } from "react-router";
 import { useCreateSnippet } from "../../api/snippetApi";
+import { showToast } from "../../utils/toastUtils";
 
 export default function CreateSnippet() {
     const navigate = useNavigate();
     const { create } = useCreateSnippet()
     
     const submitAction = async (formData) => {
-        const snippetData = Object.fromEntries(formData)
+        try {
+            const snippetData = Object.fromEntries(formData)
+            
+            await create(snippetData)
 
-        await create(snippetData)
+            showToast('Successfully created!', 'success')
 
-        navigate('/snippets')
+            navigate('/snippets')
+        } catch (error) {
+            showToast(error.message, 'error')
+        }
     }
 
     return (

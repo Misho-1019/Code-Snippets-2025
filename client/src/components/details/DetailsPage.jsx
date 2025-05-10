@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
+import { showToast } from "../../utils/toastUtils";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
@@ -14,9 +15,16 @@ export default function SnippetDetails() {
 
         if (!hasConfirm) return;
 
-        await deleteSnippet(snippetId)
+        try {
+            await deleteSnippet(snippetId)
 
-        navigate('/snippets')
+            showToast('Successfully deleted!', 'success')
+            
+            navigate('/snippets')
+        } catch (error) {
+            showToast(error.message, 'error')
+        }
+
     }
 
     const isOwner = userId === snippet.creator

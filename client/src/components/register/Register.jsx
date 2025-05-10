@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router";
 import { useRegister } from "../../api/authApi";
 import { useUserContext } from "../../context/UserContext";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { showToast } from "../../utils/toastUtils";
 
 const schema = yup.object({
     username: yup.string().required('Username is required!'),
@@ -32,19 +32,11 @@ export default function Register() {
 
             userLoginHandler(authData)
 
-            toast.success('Successful registration!', {
-                position: 'top-center',
-                autoClose: 2000,
-                theme: 'dark',
-            })
+            showToast('Successful registration!', 'success')
 
             navigate('/')
         } catch (error) {
-            toast.error(error.message || 'Registration failed!', {
-                position: 'top-center',
-                autoClose: 2000,
-                theme: 'dark',
-            })
+            showToast(error.message, 'error')
         }
     }
 

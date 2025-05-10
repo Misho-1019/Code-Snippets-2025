@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router";
 import { useLogin } from "../../api/authApi";
 import { useUserContext } from "../../context/UserContext";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { showToast } from "../../utils/toastUtils";
 
 const schema = yup.object({
     email: yup.string().email('Invalid email format!').required('Email is required!'),
@@ -30,19 +30,11 @@ export default function Login() {
 
             userLoginHandler(authData)
 
-            toast.success('Successful login!', {
-                position: 'top-center',
-                autoClose: 2000,
-                theme: 'dark',
-            })
+            showToast('Successful login!', 'success')
 
             navigate('/')
         } catch (error) {
-            toast.error(error.message || 'Login failed!', {
-                position: 'top-center',
-                autoClose: 2000,
-                theme: 'dark',
-            })
+            showToast(error.message, 'error')
         }
     }
 
