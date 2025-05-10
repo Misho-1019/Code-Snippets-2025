@@ -13,6 +13,7 @@ import CreateSnippet from './components/create/CreatePage'
 import SnippetList from './components/catalog/CatalogPage'
 import SnippetDetails from './components/details/DetailsPage'
 import EditSnippet from './components/edit/EditPage'
+import CommentsPage from './components/comments/CommentPage'
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
                         <Route path='/logout' element={<Logout />} />
                         <Route path='/snippets/create' element={<CreateSnippet />} />
                         <Route path='/snippets/:snippetId/edit' element={<EditSnippet />} />
+                        <Route path='/snippets/:snippetId/comments' element={<CommentsPage />} />
                     </Route>
 
                     <Route element={<GuestGuard />}>
