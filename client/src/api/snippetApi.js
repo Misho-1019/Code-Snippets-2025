@@ -17,6 +17,33 @@ export const useSnippets = () => {
     }
 }
 
+export const useLatestSnippets = () => {
+    const [latestSnippets, setLatestSnippets] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        setIsLoading(true)
+        setError(null)
+
+        request.get(`${baseUrl}/latest`)
+            .then(data => {
+                setLatestSnippets(data)
+                setIsLoading(false)
+            })
+            .catch(err => {
+                setError(err)
+                setIsLoading(false)
+            })
+    }, [])
+
+    return {
+        latestSnippets,
+        isLoading,
+        error,
+    }
+}
+
 export const useSnippet = (snippetId) => {
     const [snippet, setSnippet] = useState({})
     const [isLoading, setIsLoading] = useState(true)

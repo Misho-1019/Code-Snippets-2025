@@ -1,4 +1,8 @@
+import { useLatestSnippets } from "../../api/snippetApi";
+
 export default function Home() {
+    const { latestSnippets, isLoading, error } = useLatestSnippets()
+
     return (
         <main className="bg-gray-50 min-h-screen py-16 px-6">
             <div className="max-w-4xl mx-auto text-center">
@@ -17,19 +21,19 @@ export default function Home() {
 
                 <h3 className="text-2xl font-bold text-gray-700 mb-6">Latest Snippets</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((i) => (
+                    {latestSnippets.map(snippet => (
                         <div
-                            key={i}
+                            key={snippet._id}
                             className="bg-indigo-50 border border-indigo-200 rounded-xl shadow-md p-6 hover:shadow-lg transition"
                         >
-                            <h4 className="text-lg font-semibold text-indigo-800 mb-2">Snippet Title {i}</h4>
+                            <h4 className="text-lg font-semibold text-indigo-800 mb-2">{snippet.title}</h4>
                             <p className="text-sm text-gray-600 mb-4">
-                                A short description of the snippet goes here. It provides a quick summary.
+                                {snippet.description}
                             </p>
                             <pre className="bg-gray-100 text-gray-800 text-xs p-4 rounded-md overflow-x-auto">
-                                {`function example() {return "Hello World!";}`}
+                                {snippet.code}
                             </pre>
-                            <p className="text-xs text-gray-400 mt-2">Language: JavaScript</p>
+                            <p className="text-xs text-gray-400 mt-2">Language: {snippet.language}</p>
                         </div>
                     ))}
                 </div>
