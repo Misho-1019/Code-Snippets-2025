@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useLatestSnippets } from "../../api/snippetApi";
 
 export default function Home() {
@@ -34,6 +35,11 @@ export default function Home() {
                                 {snippet.code}
                             </pre>
                             <p className="text-xs text-gray-400 mt-2">Language: {snippet.language}</p>
+                            <div className="pt-4 flex justify-end gap-2">
+                                <Link to={`/snippets/${snippet._id}/details`} className="px-4 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                                    Details
+                                </Link>
+                            </div>
                         </div>
                     ))}
                 </div>
