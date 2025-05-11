@@ -19,7 +19,7 @@ export default function SnippetDetails() {
             await deleteSnippet(snippetId)
 
             showToast('Successfully deleted!', 'success')
-            
+
             navigate('/snippets')
         } catch (error) {
             showToast(error.message, 'error')
@@ -57,19 +57,21 @@ export default function SnippetDetails() {
 
             </div>
 
-            {isOwner && (
-                <div className="flex justify-end gap-2">
-                    <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
-                        Edit
-                    </Link>
-                    <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
-                        Comments
-                    </Link>
-                    <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
-                        Delete
-                    </button>
-                </div>
-            )}
+            <div className="flex justify-end gap-2">
+                <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                    Comments
+                </Link>
+                {isOwner && (
+                    <div className="flex justify-end gap-2">
+                        <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                            Edit
+                        </Link>
+                        <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
+                            Delete
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
