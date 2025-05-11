@@ -35,4 +35,5 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add login handler
  - [x] Use useActionState for login
  - [x] 
+3. Comments section
 
