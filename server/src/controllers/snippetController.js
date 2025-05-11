@@ -1,5 +1,6 @@
 import { Router } from "express";
 import snippetService from "../services/snippetService.js";
+import commentService from "../services/commentService.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { body, validationResult } from "express-validator";
 
@@ -145,6 +146,35 @@ snippetController.delete('/:snippetId', isAuth, async (req, res) => {
         res.status(200).json({ message: 'Snippet deleted successfully!' });
     } catch (err) {
         res.status(404).json({ error: err.message })
+    }
+})
+
+snippetController.get('/:snippetId/comments', async (req, res) => {
+    const snippetId = req.params.snippetId;
+
+    try {
+        const comments = await commentService.getAllComments(snippetId);
+
+        res.status(200).json(comments)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+snippetController.post('/:snippetId/comments', isAuth, async (req, res) => {
+    const snippetId = req.params.snippetId;
+    const { text, creator } = req.body;
+
+    if (!text || !creator) {
+        return res.status(404).json({message: 'Text and creator are required to post a comment!'})
+    }
+
+    try {
+        const newComment = await commentService.createComment(snippetId, { text, creator })
+
+        res.status(201).json(newComment)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 
