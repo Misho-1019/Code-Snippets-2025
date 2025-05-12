@@ -161,7 +161,9 @@ snippetController.get('/:snippetId/comments', async (req, res) => {
     }
 })
 
-snippetController.post('/:snippetId/comments', isAuth, async (req, res) => {
+snippetController.post('/:snippetId/comments', isAuth, [
+    body('text').notEmpty().withMessage('Comment is required!')
+], async (req, res) => {
     const snippetId = req.params.snippetId;
     const { text, creator } = req.body;
 
