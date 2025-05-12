@@ -1,6 +1,15 @@
 import { Link } from "react-router";
+import useAuth from "../../hooks/useAuth";
 
 export default function CommentsPage() {
+    const { username } = useAuth()
+
+    const commentAction = (formData) => {
+        const comment = formData.get('comment')
+
+        console.log(username);
+        console.log(comment);
+    }
     return (
         <main className="bg-gray-50 min-h-screen py-16 px-6">
             <div className="max-w-4xl mx-auto text-center">
@@ -12,9 +21,10 @@ export default function CommentsPage() {
                 {/* Comment Input Form (Without functionality) */}
                 <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                     <h3 className="text-xl font-semibold text-indigo-700 mb-4">Add a Comment</h3>
-                    <form className="space-y-4">
+                    <form className="space-y-4" action={commentAction}>
                         <textarea
                             className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            name="comment"
                             placeholder="Write your comment..."
                             rows="4"
                         ></textarea>
