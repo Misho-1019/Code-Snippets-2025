@@ -1,14 +1,18 @@
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import commentService from "../../services/commentService";
 
 export default function CommentsPage() {
-    const { username, email } = useAuth()
+    const { username, email, userId } = useAuth()
+    const { snippetId } = useParams()
 
-    const commentAction = (formData) => {
+    const commentAction = async (formData) => {
         const comment = formData.get('comment')
 
-        console.log(username);
-        console.log(comment);
+        const newComment = await commentService.createComment(snippetId, userId, comment)
+
+        console.log(newComment);
+        
     }
     return (
         <main className="bg-gray-50 min-h-screen py-16 px-6">
