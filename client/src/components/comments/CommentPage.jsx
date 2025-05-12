@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 export default function CommentsPage() {
-    const { username } = useAuth()
+    const { username, email } = useAuth()
 
     const commentAction = (formData) => {
         const comment = formData.get('comment')
@@ -19,23 +19,25 @@ export default function CommentsPage() {
                 </p>
 
                 {/* Comment Input Form (Without functionality) */}
-                <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-                    <h3 className="text-xl font-semibold text-indigo-700 mb-4">Add a Comment</h3>
-                    <form className="space-y-4" action={commentAction}>
-                        <textarea
-                            className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            name="comment"
-                            placeholder="Write your comment..."
-                            rows="4"
-                        ></textarea>
-                        <button
-                            type="submit"
-                            className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors"
-                        >
-                            Add Comment
-                        </button>
-                    </form>
-                </div>
+                {email && (
+                    <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                        <h3 className="text-xl font-semibold text-indigo-700 mb-4">Add a Comment</h3>
+                        <form className="space-y-4" action={commentAction}>
+                            <textarea
+                                className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                name="comment"
+                                placeholder="Write your comment..."
+                                rows="4"
+                            ></textarea>
+                            <button
+                                type="submit"
+                                className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                            >
+                                Add Comment
+                            </button>
+                        </form>
+                    </div>
+                )}
 
                 {/* Displaying Static Comments (Without fetching data) */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
