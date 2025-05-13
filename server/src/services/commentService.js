@@ -12,4 +12,7 @@ export default {
 
         return newComment;
     },
+    deleteComment(commentId) {
+        return Comment.findByIdAndDelete(commentId)
+    },
 }
