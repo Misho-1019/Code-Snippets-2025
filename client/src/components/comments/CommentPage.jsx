@@ -63,9 +63,9 @@ export default function CommentsPage() {
                     <div className="space-y-6">
                         {commentList.length > 0
                             ? (commentList.map(({ _id, text }) => (
-                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50" key={_id}>
-                                    <p className="text-sm text-gray-600">{text}</p>
-                                    <p className="text-xs text-gray-400 mt-2">By {username}</p>
+                                <div className="p-4 border border-indigo-200 rounded-lg shadow-md bg-indigo-100" key={_id}>
+                                    <p className="text-sm text-indigo-900">{text}</p>
+                                    <p className="text-xs text-indigo-700 mt-2 italic">By {username}</p>
                                 </div>
                             )))
                             : (
