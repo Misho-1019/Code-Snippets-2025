@@ -1,19 +1,31 @@
 import { Link, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import commentService from "../../services/commentService";
+import { useEffect, useState } from "react";
 
 export default function CommentsPage() {
     const { username, email, userId } = useAuth()
     const { snippetId } = useParams()
+    const [comments, setComments] = useState([])
+
+    useEffect(() => {
+        commentService.getAllComments(snippetId)
+            .then(setComments)
+    }, [snippetId])
+
+    const commentCreateHandler = (newComment) => {
+        setComments(state => [...state, newComment])
+    }
 
     const commentAction = async (formData) => {
         const comment = formData.get('comment')
 
         const newComment = await commentService.createComment(snippetId, userId, comment)
 
-        console.log(newComment);
-        
+        commentCreateHandler(newComment);
+
     }
+
     return (
         <main className="bg-gray-50 min-h-screen py-16 px-6">
             <div className="max-w-4xl mx-auto text-center">
@@ -49,18 +61,19 @@ export default function CommentsPage() {
 
                     {/* Static Example Comments */}
                     <div className="space-y-6">
-                        <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
-                            <p className="text-sm text-gray-600">This is a great snippet, really helpful!</p>
-                            <p className="text-xs text-gray-400 mt-2">By John Doe</p>
-                        </div>
-                        <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
-                            <p className="text-sm text-gray-600">Nice code structure, thanks for sharing!</p>
-                            <p className="text-xs text-gray-400 mt-2">By Jane Smith</p>
-                        </div>
-                        <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
-                            <p className="text-sm text-gray-600">Great explanation and clean code!</p>
-                            <p className="text-xs text-gray-400 mt-2">By Mark Lee</p>
-                        </div>
+                        {comments.length > 0
+                            ? (comments.map(({ _id, text }) => (
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50" key={_id}>
+                                    <p className="text-sm text-gray-600">{text}</p>
+                                    <p className="text-xs text-gray-400 mt-2">By {username}</p>
+                                </div>
+                            )))
+                            : (
+                                <p className="text-gray-500 italic bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                    No comments yet. Be the first to share your thoughts!
+                                </p>
+                            )
+                        }
                     </div>
                 </div>
             </div>
