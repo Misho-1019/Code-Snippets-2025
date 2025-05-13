@@ -2,7 +2,6 @@ import { useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useComments, useCreateComments } from "../../api/commentApi";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { showToast } from "../../utils/toastUtils";
 
 export default function CommentsPage() {
@@ -27,7 +26,7 @@ export default function CommentsPage() {
 
         try {
             await commentCreateHandler(comment)
-            
+
             showToast('Comment added — thanks for sharing your thoughts!', 'success')
         } catch (err) {
             showToast(err.message, 'error')
@@ -70,10 +69,26 @@ export default function CommentsPage() {
                     {/* Static Example Comments */}
                     <div className="space-y-6">
                         {commentList.length > 0
-                            ? (commentList.map(({ _id, text }) => (
+                            ? (commentList.map(({ _id, text, creator }) => (
                                 <div className="p-4 border border-indigo-200 rounded-lg shadow-md bg-indigo-100" key={_id}>
                                     <p className="text-sm text-indigo-900">{text}</p>
-                                    <p className="text-xs text-indigo-700 mt-2 italic">By {username}</p>
+                                    <div className="flex justify-between items-center mt-4">
+                                        <p className="text-xs text-indigo-700 italic">By {username}</p>
+                                        {userId === creator ? (
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    className="bg-indigo-500 text-white text-xs px-3 py-1 rounded-md hover:bg-indigo-600 transition duration-200"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        ) : ''}
+                                    </div>
                                 </div>
                             )))
                             : (
