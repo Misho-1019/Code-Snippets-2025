@@ -180,4 +180,20 @@ snippetController.post('/:snippetId/comments', isAuth, [
     }
 })
 
+snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req, res) => {
+    const commentId = req.params.commentId;
+
+    try {
+        const commentDeleted = await commentService.deleteComment(commentId)
+
+        if (!commentDeleted) {
+            return res.status(404).json({ message: 'Comment not found!' })
+        }
+
+        res.status(200).json({ message: 'Comment deleted successfully!' })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
 export default snippetController;
