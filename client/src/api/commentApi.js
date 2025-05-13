@@ -48,3 +48,15 @@ export const useCreateComments = () => {
         create,
     }
 }
+
+export const useDeleteComment = () => {
+    const { request } = useAuth()
+
+    const deleteComment = (snippetId, commentId) => {
+        return request.delete(`${baseUrl}/${snippetId}/comments/${commentId}`)
+    }
+
+    return {
+        deleteComment,
+    }
+}
