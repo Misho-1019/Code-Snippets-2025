@@ -2,6 +2,8 @@ import { useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useComments, useCreateComments } from "../../api/commentApi";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { showToast } from "../../utils/toastUtils";
 
 export default function CommentsPage() {
     const { username, email, userId } = useAuth()
@@ -23,7 +25,13 @@ export default function CommentsPage() {
     const commentAction = async (formData) => {
         const comment = formData.get('comment')
 
-        commentCreateHandler(comment)
+        try {
+            await commentCreateHandler(comment)
+            
+            showToast('Comment added — thanks for sharing your thoughts!', 'success')
+        } catch (err) {
+            showToast(err.message, 'error')
+        }
     }
 
     return (
