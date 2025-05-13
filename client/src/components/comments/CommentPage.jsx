@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
-import { useComments, useCreateComments } from "../../api/commentApi";
+import { useComments, useCreateComments, useDeleteComment } from "../../api/commentApi";
 import { useEffect, useState } from "react";
 import { showToast } from "../../utils/toastUtils";
 
@@ -9,6 +9,7 @@ export default function CommentsPage() {
     const { snippetId } = useParams()
     const { comments } = useComments(snippetId)
     const { create } = useCreateComments()
+    const { deleteComment } = useDeleteComment()
     const [commentList, setCommentList] = useState([])
 
     useEffect(() => {
@@ -30,6 +31,17 @@ export default function CommentsPage() {
             showToast('Comment added — thanks for sharing your thoughts!', 'success')
         } catch (err) {
             showToast(err.message, 'error')
+        }
+    }
+
+    const commentDeleteHandler = async (commentId) => {
+        try {
+            await deleteComment(snippetId, commentId)
+            setCommentList(prev => prev.filter(comment => comment._id !== commentId))
+
+            showToast('Comment deleted!', 'success')
+        } catch (err) {
+            showToast(err.message || 'Failed to delete comment!', 'error')
         }
     }
 
@@ -83,6 +95,7 @@ export default function CommentsPage() {
                                                 </button>
                                                 <button
                                                     className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
+                                                    onClick={() => commentDeleteHandler(_id)}  
                                                 >
                                                     Delete
                                                 </button>
