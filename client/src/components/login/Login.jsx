@@ -32,7 +32,7 @@ export default function Login() {
 
             showToast('Successful login!', 'success')
 
-            navigate('/')
+            navigate(-1)
         } catch (error) {
             showToast(error.message, 'error')
         }

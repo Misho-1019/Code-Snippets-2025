@@ -1,29 +1,29 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
-import commentService from "../../services/commentService";
+import { useComments, useCreateComments } from "../../api/commentApi";
 import { useEffect, useState } from "react";
 
 export default function CommentsPage() {
     const { username, email, userId } = useAuth()
     const { snippetId } = useParams()
-    const [comments, setComments] = useState([])
+    const { comments } = useComments(snippetId)
+    const { create } = useCreateComments()
+    const [commentList, setCommentList] = useState([])
 
     useEffect(() => {
-        commentService.getAllComments(snippetId)
-            .then(setComments)
-    }, [snippetId])
+        setCommentList(comments)
+    }, [comments])
 
-    const commentCreateHandler = (newComment) => {
-        setComments(state => [...state, newComment])
+    const commentCreateHandler = async (newComment) => {
+        const createdComment = await create(snippetId, newComment, userId)
+
+        setCommentList(prev => [...prev, createdComment])
     }
 
     const commentAction = async (formData) => {
         const comment = formData.get('comment')
 
-        const newComment = await commentService.createComment(snippetId, userId, comment)
-
-        commentCreateHandler(newComment);
-
+        commentCreateHandler(comment)
     }
 
     return (
@@ -61,8 +61,8 @@ export default function CommentsPage() {
 
                     {/* Static Example Comments */}
                     <div className="space-y-6">
-                        {comments.length > 0
-                            ? (comments.map(({ _id, text }) => (
+                        {commentList.length > 0
+                            ? (commentList.map(({ _id, text }) => (
                                 <div className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50" key={_id}>
                                     <p className="text-sm text-gray-600">{text}</p>
                                     <p className="text-xs text-gray-400 mt-2">By {username}</p>
