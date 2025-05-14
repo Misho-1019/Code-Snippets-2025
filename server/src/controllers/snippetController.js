@@ -3,6 +3,7 @@ import snippetService from "../services/snippetService.js";
 import commentService from "../services/commentService.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { body, validationResult } from "express-validator";
+import likesService from "../services/likesService.js";
 
 const snippetController = Router();
 
@@ -191,6 +192,18 @@ snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req, 
         }
 
         res.status(200).json({ message: 'Comment deleted successfully!' })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+})
+
+snippetController.post('/:snippetId/likes', isAuth, async (req, res) => {
+    const { snippetId } = req.params
+    const userId = req.user?.id
+
+    try {
+        const result = await likesService.toggleLike(snippetId, userId)
+        res.status(200).json(result)
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
