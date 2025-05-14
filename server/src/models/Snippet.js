@@ -26,7 +26,11 @@ const snippetSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    likes: [{
+        type: Types.ObjectId,
+        ref: 'User',
+    }]
 })
 
 const Snippet = model('Snippet', snippetSchema);
