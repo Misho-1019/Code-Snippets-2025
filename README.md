@@ -34,6 +34,67 @@ Full-stack app to manage and store personal code snippets securely
  - [x] Add abstract requester
  - [x] Add login handler
  - [x] Use useActionState for login
- - [x] 
+ - [x] Sent user info to frontend
+ - [x] Add onLogin custom hook
+ - [x] Add abort controller to useLogin
+ - [x] Save authData in App.jsx
+ - [x] Use context for authData
+ - [x] Add user register
+ - [x] Add useLogout
+ - [x] Redirect on successful logout
+ - [x] Add dynamic navigation
+ - [x] Add usePersistedState
+ - [x] Use external context provider
+ - [x] Add useAuth custom hook
+ - [x] Add auth route guard
+ - [x] Add guest route guard
+ - [x] Add error validation with express-validator
+ - [x] Install react-hook-form
+ - [x] Install react-toastify
+ - [x] Add error validation on Login form
+ - [x] Add validation in register form
+ - [x] Add error handling to the frontend
+ - [x] Add inline error messages
+ - [x] Extract snippet components
+ - [x] Add snippet service
+ - [x] Get all snippets
+ - [x] List snippets in catalog page
+ - [x] Empty snippets screen
+ - [x] Add snippet details page
+ - [x] Delete snippet functionality
+ - [x] Show edit page with prepopulated values in the form
+ - [x] Edit snippet functionality
+ - [x] Create snippet with mongoose
+ - [x] Add useSnippets api
+ - [x] Add details snippet hook api
+ - [x] Refactor snippet service
+ - [x] Add name attributes to the forms
+ - [x] Check whether is owner
+ - [x] Check for owner when edit
+ - [x] Create getLatest snippet route
+ - [x] Add latest snippets in home page
+ - [x] Add abstract toast function
+ - [x] Add error handling in the frontend
 3. Comments section
+ - [x] Add comment page
+ - [x] Create Comment model
+ - [x] Create comment service
+ - [x] Implement comment system for snippets in the backend
+ - [x] Add error handling
+ - [x] Take comment text from the form
+ - [x] Save comment
+ - [x] Show comments
+ - [x] Remove comment service
+ - [x] Show error or success messages on comments
+ - [x] Add comment buttons and check for owner
+ - [x] Add delete comment service
+ - [x] Refactor delete comment route
+ - [x] Add delete comment api
+ - [x] Create delete comment functionality
+4. Like section
+ - [x] Add likes in snippet model
+ - [x] Refactor likes snippet route
+ - [x] Add toggle like api
+ - [x] Create like snippet functionality
+ 
 
