@@ -26,7 +26,7 @@ export default function Home() {
                     <div className="text-gray-500">Loading snippets...</div>
                 )}
 
-                {!!error ? (
+                {error ? (
                     <div className="text-red-500">Failed to load snippets.</div>
                 ) : null}
 
