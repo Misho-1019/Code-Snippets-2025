@@ -32,7 +32,7 @@ export default {
         })
     },
     updateSnippet(snippetData: Record<string, unknown>, snippetId: string) {
-        return Snippet.findByIdAndUpdate(snippetId, snippetData)
+        return Snippet.findByIdAndUpdate(snippetId, snippetData, { new: true })
     },
     deleteSnippet(snippetId: string) {
         return Snippet.findByIdAndDelete(snippetId)
