@@ -6,14 +6,30 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import morgan from "morgan";
 
 import routes from "./routes.js";
 import { authMiddleware } from './middlewares/authMiddleware.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+
+const requiredEnvVars = ['JWT_SECRET', 'MONGO_URI']
+for (const envVar of requiredEnvVars) {
+    if (!process.env[envVar]) {
+        console.error(`Missing required env variable: ${envVar}`)
+        process.exit(1)
+    }
+}
 
 const app = express();
 
+app.use(helmet())
+app.use(mongoSanitize())
+app.use(morgan('dev'))
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true,
 }))
 
@@ -39,6 +55,7 @@ const apiLimiter = rateLimit({
 app.use(apiLimiter)
 app.use(authMiddleware)
 app.use(routes)
+app.use(errorHandler)
 
 const port = process.env.PORT || 3030;
 

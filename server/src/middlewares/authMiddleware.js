@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-const SECRET = process.env.JWT_SECRET || 'BASICSECRET';
+const SECRET = process.env.JWT_SECRET;
 
 export const authMiddleware = (req, res, next) => {
     const token = req.cookies['auth']
