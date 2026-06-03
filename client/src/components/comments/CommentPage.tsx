@@ -3,45 +3,43 @@ import useAuth from "../../hooks/useAuth";
 import { useComments, useCreateComments, useDeleteComment } from "../../api/commentApi";
 import { useEffect, useState } from "react";
 import { showToast } from "../../utils/toastUtils";
+import type { Comment } from "../../types";
 
 export default function CommentsPage() {
     const { username, email, userId } = useAuth()
-    const { snippetId } = useParams()
-    const { comments } = useComments(snippetId)
+    const { snippetId } = useParams<{ snippetId: string }>()
+    const { comments } = useComments(snippetId || '')
     const { create } = useCreateComments()
     const { deleteComment } = useDeleteComment()
-    const [commentList, setCommentList] = useState([])
+    const [commentList, setCommentList] = useState<Comment[]>([])
 
     useEffect(() => {
         setCommentList(comments)
     }, [comments])
 
-    const commentCreateHandler = async (newComment) => {
-        const createdComment = await create(snippetId, newComment)
-
-        setCommentList(prev => [...prev, createdComment])
+    const commentCreateHandler = async (newComment: string) => {
+        const createdComment = await create(snippetId!, newComment)
+        setCommentList(prev => [...prev, createdComment as Comment])
     }
 
-    const commentAction = async (formData) => {
-        const comment = formData.get('comment')
+    const commentAction = async (formData: FormData) => {
+        const comment = formData.get('comment') as string
 
         try {
             await commentCreateHandler(comment)
-
             showToast('Comment added — thanks for sharing your thoughts!', 'success')
         } catch (err) {
-            showToast(err.message, 'error')
+            showToast((err as Error).message, 'error')
         }
     }
 
-    const commentDeleteHandler = async (commentId) => {
+    const commentDeleteHandler = async (commentId: string) => {
         try {
-            await deleteComment(snippetId, commentId)
+            await deleteComment(snippetId!, commentId)
             setCommentList(prev => prev.filter(comment => comment._id !== commentId))
-
             showToast('Comment deleted!', 'success')
         } catch (err) {
-            showToast(err.message || 'Failed to delete comment!', 'error')
+            showToast((err as Error).message || 'Failed to delete comment!', 'error')
         }
     }
 
@@ -53,7 +51,6 @@ export default function CommentsPage() {
                     Share your thoughts and interact with others.
                 </p>
 
-                {/* Comment Input Form (Without functionality) */}
                 {email && (
                     <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Add a Comment</h3>
@@ -62,23 +59,19 @@ export default function CommentsPage() {
                                 className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 name="comment"
                                 placeholder="Write your comment..."
-                                rows="4"
-                            ></textarea>
-                            <button
-                                type="submit"
-                                className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors"
-                            >
+                                rows={4}
+                            />
+                            <button type="submit"
+                                className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors">
                                 Add Comment
                             </button>
                         </form>
                     </div>
                 )}
 
-                {/* Displaying Static Comments (Without fetching data) */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <h3 className="text-xl font-semibold text-indigo-700 mb-4">All Comments</h3>
 
-                    {/* Static Example Comments */}
                     <div className="space-y-6">
                         {commentList.length > 0
                             ? (commentList.map(({ _id, text, creator }) => (
@@ -89,18 +82,12 @@ export default function CommentsPage() {
                                         {userId === creator ? (
                                             <div className="flex space-x-2">
                                                 <button
-                                                    className="bg-indigo-500 text-white text-xs px-3 py-1 rounded-md hover:bg-indigo-600 transition duration-200"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
                                                     className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
-                                                    onClick={() => commentDeleteHandler(_id)}  
-                                                >
+                                                    onClick={() => commentDeleteHandler(_id)}>
                                                     Delete
                                                 </button>
                                             </div>
-                                        ) : ''}
+                                        ) : null}
                                     </div>
                                 </div>
                             )))

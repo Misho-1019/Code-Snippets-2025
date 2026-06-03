@@ -21,6 +21,19 @@ export default function Home() {
                 </div>
 
                 <h3 className="text-2xl font-bold text-gray-700 mb-6">Latest Snippets</h3>
+
+                {isLoading && (
+                    <div className="text-gray-500">Loading snippets...</div>
+                )}
+
+                {!!error ? (
+                    <div className="text-red-500">Failed to load snippets.</div>
+                ) : null}
+
+                {!isLoading && !error && latestSnippets.length === 0 && (
+                    <div className="text-gray-500">No snippets yet.</div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {latestSnippets.map(snippet => (
                         <div

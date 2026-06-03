@@ -1,7 +1,9 @@
-import { toast } from "react-toastify";
+import { toast, ToastOptions } from "react-toastify";
 
-export const showToast = (message, type = 'success', options = {}) => {
-    const defaultOptions = {
+type ToastType = 'success' | 'error' | 'info' | 'warning'
+
+export const showToast = (message: string, type: ToastType = 'success', options: ToastOptions = {}): void => {
+    const defaultOptions: ToastOptions = {
         position: 'top-center',
         autoClose: 2000,
         theme: 'dark',
@@ -12,18 +14,18 @@ export const showToast = (message, type = 'success', options = {}) => {
     switch (type) {
         case 'success':
             toast.success(message, toastOptions)
-            break;
+            break
         case 'error':
             toast.error(message, toastOptions)
-            break;
+            break
         case 'info':
             toast.info(message, toastOptions)
-            break;
+            break
         case 'warning':
             toast.warning(message, toastOptions)
-            break;
+            break
         default:
             toast(message, toastOptions)
-            break;
+            break
     }
 }

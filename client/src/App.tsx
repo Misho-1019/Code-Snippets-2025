@@ -16,12 +16,10 @@ import EditSnippet from './components/edit/EditPage'
 import CommentsPage from './components/comments/CommentPage'
 
 function App() {
-
     return (
         <>
             <UserProvider>
                 <Header />
-
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/snippets' element={<SnippetList />} />
@@ -39,7 +37,6 @@ function App() {
                         <Route path='/register' element={<Register />} />
                     </Route>
                 </Routes>
-
                 <ToastContainer />
             </UserProvider>
         </>

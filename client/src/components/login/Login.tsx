@@ -8,8 +8,13 @@ import { showToast } from "../../utils/toastUtils";
 
 const schema = yup.object({
     email: yup.string().email('Invalid email format!').required('Email is required!'),
-    password: yup.string().min(6, 'Password must be at least 6 characters!'),
+    password: yup.string().min(6, 'Password must be at least 6 characters!').required('Password is required!'),
 })
+
+interface LoginForm {
+    email: string
+    password: string
+}
 
 export default function Login() {
     const navigate = useNavigate();
@@ -20,21 +25,18 @@ export default function Login() {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm({
+    } = useForm<LoginForm>({
         resolver: yupResolver(schema),
     })
 
-    const loginHandler = async (data) => {
+    const loginHandler = async (data: LoginForm) => {
         try {
             const authData = await login(data.email, data.password)
-
             userLoginHandler(authData)
-
             showToast('Successful login!', 'success')
-
             navigate(-1)
         } catch (error) {
-            showToast(error.message, 'error')
+            showToast((error as Error).message, 'error')
         }
     }
 
@@ -45,12 +47,12 @@ export default function Login() {
                 <form className="space-y-4" onSubmit={handleSubmit(loginHandler)} noValidate>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" className="mt-1 w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500" {...register('email')} placeholder="Email..." />
+                        <input type="email" className="mt-1 w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500" {...register('email')} placeholder="Email..." />
                         {errors.email && (<p className="text-red-500 text-sm mt-1">{errors.email.message}</p>)}
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" className="mt-1 w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500" {...register('password')} placeholder="Password..." />
+                        <input type="password" className="mt-1 w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500" {...register('password')} placeholder="Password..." />
                         {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password.message}</p>)}
                     </div>
                     <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" disabled={isSubmitting}>

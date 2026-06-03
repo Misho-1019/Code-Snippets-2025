@@ -6,5 +6,5 @@ export default function Logout() {
 
     return isLoggedOut
         ? <Navigate to="/" />
-        : null;
+        : null
 }

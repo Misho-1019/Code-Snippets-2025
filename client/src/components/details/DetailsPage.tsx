@@ -9,11 +9,11 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 export default function SnippetDetails() {
     const navigate = useNavigate()
     const { userId } = useAuth()
-    const { snippetId } = useParams();
-    const { snippet } = useSnippet(snippetId)
+    const { snippetId } = useParams<{ snippetId: string }>()
+    const { snippet, isLoading } = useSnippet(snippetId || '')
     const { deleteSnippet } = useDeleteSnippet()
     const { toggleLike } = useToggleLike()
-    
+
     const [likesCount, setLikesCount] = useState(0)
     const [likedByUser, setLikedByUser] = useState(false)
 
@@ -24,33 +24,31 @@ export default function SnippetDetails() {
         }
     }, [snippet, userId])
 
-    const snippetDeleteClickHandler = async () => {
-        const hasConfirm = confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
+    if (isLoading) return <div>Loading...</div>
+    if (!snippet) return <div className="text-center mt-10 text-gray-500">Snippet not found.</div>
 
-        if (!hasConfirm) return;
+    const snippetDeleteClickHandler = async () => {
+        const hasConfirm = window.confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
+
+        if (!hasConfirm) return
 
         try {
-            await deleteSnippet(snippetId)
-
+            await deleteSnippet(snippetId!)
             showToast('Successfully deleted!', 'success')
-
             navigate('/snippets')
         } catch (error) {
-            showToast(error.message, 'error')
+            showToast((error as Error).message, 'error')
         }
-
     }
 
     const likeHandler = async () => {
         try {
-            const result = await toggleLike(snippetId)
-
-            setLikesCount(result.likeCount)
+            const result = await toggleLike(snippetId!)
+            setLikesCount(result.likesCount)
             setLikedByUser(result.likedByUser)
-
             showToast(result.likedByUser ? 'You liked the snippet!' : 'You unliked the snippet!', 'success')
         } catch (err) {
-            showToast(err.message, 'error')
+            showToast((err as Error).message, 'error')
         }
     }
 
@@ -71,9 +69,7 @@ export default function SnippetDetails() {
 
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-600 leading-relaxed">
-                    {snippet.description}
-                </p>
+                <p className="text-gray-600 leading-relaxed">{snippet.description}</p>
             </div>
 
             <div className="mb-6">
@@ -81,16 +77,13 @@ export default function SnippetDetails() {
                 <pre className="bg-indigo-100 border border-indigo-200 rounded-md p-4 text-sm overflow-x-auto text-gray-800">
                     {snippet.code}
                 </pre>
-
             </div>
 
             <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-2">
-                    {/* Like Button */}
                     <button
                         onClick={likeHandler}
-                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"
-                            }`}
+                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"}`}
                     >
                         {likedByUser ? <FaHeart /> : <FaRegHeart />}
                         {likesCount} {likesCount === 1 ? "Like" : "Likes"}

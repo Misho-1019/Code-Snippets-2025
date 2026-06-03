@@ -1,12 +1,14 @@
 import { Link } from "react-router";
 
-export default function ItemCatalog({
-    _id,
-    title,
-    language,
-    description,
-    code,
-}) {
+interface ItemCatalogProps {
+    _id: string
+    title: string
+    language: string
+    description: string
+    code: string
+}
+
+export default function ItemCatalog({ _id, title, language, description, code }: ItemCatalogProps) {
     return (
         <div className="bg-white shadow-md rounded-xl p-6 flex flex-col justify-between hover:shadow-lg transition-shadow">
             <div>

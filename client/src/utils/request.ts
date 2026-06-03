@@ -1,5 +1,12 @@
-const request = async (method, url, data, options = {}) => {
+interface RequestOptions {
+    headers?: Record<string, string>
+    signal?: AbortSignal
+    [key: string]: unknown
+}
 
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+
+const request = async (method: RequestMethod, url: string, data?: unknown, options: RequestOptions = {}): Promise<unknown> => {
     if (method !== 'GET') {
         options.method = method
     }
@@ -16,26 +23,24 @@ const request = async (method, url, data, options = {}) => {
     }
 
     options = {
-        credentials: 'include',
+        credentials: 'include' as RequestCredentials,
         ...options,
     }
 
-    const response = await fetch(url, options)
+    const response = await fetch(url, options as RequestInit)
     const responseContentType = response.headers.get('Content-Type')
 
     if (!responseContentType) {
-        return;
+        return
     }
 
     if (!response.ok) {
-        const result = await response.json();
-
-        throw result;
+        const result = await response.json()
+        throw result
     }
-    
-    const result = await response.json();
 
-    return result;
+    const result = await response.json()
+    return result
 }
 
 export default {
