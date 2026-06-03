@@ -10,6 +10,9 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import morgan from "morgan";
 
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './utils/swagger.js';
+
 import routes from "./routes.js";
 import { authMiddleware } from './middlewares/authMiddleware.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -43,16 +46,25 @@ try {
     console.error(err.message);
 }
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
 app.use(express.json())
 app.use(cookieParser())
 
-const apiLimiter = rateLimit({
+const authLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 10,
+    message: 'Too many auth attempts from this IP, please try again!',
+})
+
+const generalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
     message: 'Too many request from this IP, please try again!',
 })
 
-app.use(apiLimiter)
+app.use('/auth', authLimiter)
+app.use(generalLimiter)
 app.use(authMiddleware)
 app.use(routes)
 app.use(errorHandler)
