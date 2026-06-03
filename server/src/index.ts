@@ -37,13 +37,13 @@ app.use(cors({
 }))
 
 try {
-    const uri = process.env.MONGO_URI;
+    const uri = process.env.MONGO_URI as string;
     await mongoose.connect(uri)
 
     console.log('DB connected successfully!');
 } catch (err) {
     console.log('Cannot connect!');
-    console.error(err.message);
+    console.error(err instanceof Error ? err.message : err);
 }
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))

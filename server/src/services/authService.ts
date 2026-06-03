@@ -2,10 +2,23 @@ import User from "../models/User.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET;
+const SECRET = process.env.JWT_SECRET as string;
+
+export interface AuthResult {
+    token: string;
+    _id: string;
+    email: string;
+    username: string;
+}
+
+export interface AuthData {
+    username: string;
+    email: string;
+    password: string;
+}
 
 export default {
-    async register(authData) {
+    async register(authData: AuthData): Promise<AuthResult> {
         const userCount = await User.countDocuments({ email: authData.email })
 
         if (userCount > 0) {
@@ -23,19 +36,19 @@ export default {
 
         return {
             token,
-            _id: user._id,
+            _id: user._id as string,
             email: user.email,
             username: user.username,
         };
     },
-    async login(email, password) {
+    async login(email: string, password: string): Promise<AuthResult> {
         const user = await User.findOne({ email })
 
         if (!user) {
             throw new Error('Invalid email or password!')
         }
 
-        const isValid = await bcrypt.compare(password, user.password)
+        const isValid = await bcrypt.compare(password, user.password as string)
 
         if (!isValid) {
             throw new Error('Invalid email or password!')
@@ -50,7 +63,7 @@ export default {
         
         return {
             token,
-            _id: user._id,
+            _id: user._id as string,
             email: user.email,
             username: user.username,
         };

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import authService from "../services/authService.js";
 import { isAuth, isGuest } from "../middlewares/authMiddleware.js";
 import { registerSchema, loginSchema, validate } from "../validators/authValidator.js";
@@ -28,7 +28,7 @@ const authController = Router();
  *       400:
  *         description: Validation error or user already exists
  */
-authController.post('/register', isGuest, validate(registerSchema), async (req, res) => {
+authController.post('/register', isGuest, validate(registerSchema), async (req: Request, res: Response) => {
     const authData = req.body;
 
     try {
@@ -36,8 +36,9 @@ authController.post('/register', isGuest, validate(registerSchema), async (req, 
         res.cookie('auth', result.token, { httpOnly: true })
 
         res.status(201).json(result)
-    } catch (err) {
-        res.status(400).json({ message: err.message }).end()
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Registration failed'
+        res.status(400).json({ message }).end()
     }
 })
 
@@ -63,7 +64,7 @@ authController.post('/register', isGuest, validate(registerSchema), async (req, 
  *       400:
  *         description: Invalid email or password
  */
-authController.post('/login', isGuest, validate(loginSchema), async (req, res) => {
+authController.post('/login', isGuest, validate(loginSchema), async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
@@ -72,8 +73,9 @@ authController.post('/login', isGuest, validate(loginSchema), async (req, res) =
         res.cookie('auth', result.token, { httpOnly: true })
 
         res.status(200).json(result)
-    } catch (err) {
-        res.status(400).json({ message: err.message }).end()
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Login failed'
+        res.status(400).json({ message }).end()
     }
 })
 
@@ -91,13 +93,13 @@ authController.post('/login', isGuest, validate(loginSchema), async (req, res) =
  *       401:
  *         description: Unauthorized
  */
-authController.get('/logout', isAuth, (req, res) => {
+authController.get('/logout', isAuth, (req: Request, res: Response) => {
     try {
         res.clearCookie('auth')
-        return res.status(200).json({ message: 'Logout successfully!' })
+        res.status(200).json({ message: 'Logout successfully!' })
     } catch (error) {
-        console.log(error.message);
-        res.status(403).json({ message: error.message })
+        console.log(error instanceof Error ? error.message : error);
+        res.status(403).json({ message: 'Logout failed' })
     }
 })
 

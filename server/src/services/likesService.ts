@@ -1,20 +1,26 @@
 import Snippet from "../models/Snippet.js"
 
+export interface LikeResult {
+    likesCount: number;
+    likedByUser: boolean;
+}
+
 export default {
-    async toggleLike(snippetId, userId) {
+    async toggleLike(snippetId: string, userId: string): Promise<LikeResult> {
         const snippet = await Snippet.findById(snippetId)
 
         if (!snippet) {
             throw new Error('Snippet not found!')
         }
 
-        const hasLiked = snippet.likes.includes(userId)
+        const likes = snippet.likes as any
+        const hasLiked = likes.includes(userId)
 
         if (hasLiked) {
-            snippet.likes.pull(userId)
+            likes.pull(userId)
         }
         else {
-            snippet.likes.push(userId)
+            likes.push(userId)
         }
 
         await snippet.save()

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Request, Response, NextFunction } from 'express'
 
 export const registerSchema = z.object({
     username: z.string().min(1, 'Username is required').min(2, 'Username must be at least 2 characters'),
@@ -11,15 +12,16 @@ export const loginSchema = z.object({
     password: z.string().min(1, 'Password is required'),
 })
 
-export const validate = (schema) => (req, res, next) => {
+export const validate = (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction): void => {
     const result = schema.safeParse(req.body)
     if (!result.success) {
-        return res.status(400).json({
-            errors: result.error.errors.map(err => ({
-                field: err.path.join('.'),
-                message: err.message,
+        res.status(400).json({
+            errors: result.error.issues.map((issue: z.ZodIssue) => ({
+                field: issue.path.join('.'),
+                message: issue.message,
             })),
         })
+        return
     }
     req.body = result.data
     next()

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import snippetService from "../services/snippetService.js";
 import commentService from "../services/commentService.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
@@ -42,13 +42,13 @@ const snippetController = Router();
  *       500:
  *         description: Server error
  */
-snippetController.get('/', validateQuery(paginationSchema), async (req, res) => {
+snippetController.get('/', validateQuery(paginationSchema), async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const { title, description, language } = req.query
+    const { title, description, language } = req.query as Record<string, string | undefined>
 
-    const filter = {};
+    const filter: Record<string, string> = {};
 
     if (title) filter.title = title;
     if (description) filter.description = description;
@@ -87,19 +87,20 @@ snippetController.get('/', validateQuery(paginationSchema), async (req, res) => 
  *       404:
  *         description: No snippets found
  */
-snippetController.get('/latest', async (req, res) => {
-    const { sortBy = 'createdAt', order = 'desc', pageSize = 3 } = req.query;
+snippetController.get('/latest', async (req: Request, res: Response) => {
+    const { sortBy = 'createdAt', order = 'desc', pageSize = 3 } = req.query as Record<string, string>;
 
     try {
-        const snippets = await snippetService.getLatest({ sortBy, order, pageSize })
+        const snippets = await snippetService.getLatest({ sortBy, order, pageSize: Number(pageSize) })
 
         if (!snippets || snippets.length === 0) {
-            return res.status(404).json({ error: 'No snippets found!' })
+            res.status(404).json({ error: 'No snippets found!' })
+            return
         }
 
         res.status(200).json(snippets)
     } catch (err) {
-        console.error(err.message);
+        console.error(err instanceof Error ? err.message : err);
         res.status(500).json({ error: 'Server error while fetching latest snippets!' })
     }
 })
@@ -121,19 +122,20 @@ snippetController.get('/latest', async (req, res) => {
  *       404:
  *         description: Snippet not found
  */
-snippetController.get('/:snippetId', async (req, res) => {
-    const snippetId = req.params.snippetId;
+snippetController.get('/:snippetId', async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
 
     try {
         const snippet = await snippetService.getOne(snippetId)
 
         if (!snippet) {
-            return res.status(404).json({ error: 'Snippet not found!' })
+            res.status(404).json({ error: 'Snippet not found!' })
+            return
         }
 
-        return res.status(200).json(snippet)
+        res.status(200).json(snippet)
     } catch (err) {
-        console.error(err.message);
+        console.error(err instanceof Error ? err.message : err);
         res.status(500).json({ error: 'Failed to fetch snippet!' })
     }
 })
@@ -164,17 +166,17 @@ snippetController.get('/:snippetId', async (req, res) => {
  *       400:
  *         description: Validation error
  */
-snippetController.post('/create', isAuth, validate(createSnippetSchema), async (req, res) => {
+snippetController.post('/create', isAuth, validate(createSnippetSchema), async (req: Request, res: Response) => {
     const snippetData = req.body;
     const creatorId = req.user?.id;
 
     try {
-        const newSnippet = await snippetService.createSnippet(snippetData, creatorId)
+        const newSnippet = await snippetService.createSnippet(snippetData, creatorId!)
 
         res.status(201).json(newSnippet)
     } catch (err) {
-        console.error(err.message);
-        res.status(400).json({ error: err.message })
+        console.error(err instanceof Error ? err.message : err);
+        res.status(400).json({ error: err instanceof Error ? err.message : 'Failed to create snippet' })
     }
 })
 
@@ -209,28 +211,30 @@ snippetController.post('/create', isAuth, validate(createSnippetSchema), async (
  *       404:
  *         description: Snippet not found
  */
-snippetController.put('/:snippetId', isAuth, validate(updateSnippetSchema), async (req, res) => {
-    const snippetId = req.params.snippetId;
+snippetController.put('/:snippetId', isAuth, validate(updateSnippetSchema), async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
     const snippetData = req.body;
-    const userId = req.user.id;
+    const userId = req.user!.id;
 
     try {
         const snippet = await snippetService.getOne(snippetId)
 
         if (!snippet) {
-            return res.status(404).json({ error: 'Snippet not found!' })
+            res.status(404).json({ error: 'Snippet not found!' })
+            return
         }
 
         if (snippet.creator.toString() !== userId) {
-            return res.status(403).json({ error: 'Unauthorized!' })
+            res.status(403).json({ error: 'Unauthorized!' })
+            return
         }
 
         const updatedSnippet = await snippetService.updateSnippet(snippetData, snippetId)
 
         res.status(200).json(updatedSnippet)
     } catch (err) {
-        console.error(err.message);
-        res.status(400).json({ error: err.message })
+        console.error(err instanceof Error ? err.message : err);
+        res.status(400).json({ error: err instanceof Error ? err.message : 'Failed to update snippet' })
     }
 })
 
@@ -255,22 +259,28 @@ snippetController.put('/:snippetId', isAuth, validate(updateSnippetSchema), asyn
  *       404:
  *         description: Snippet not found
  */
-snippetController.delete('/:snippetId', isAuth, async (req, res) => {
-    const snippetId = req.params.snippetId;
+snippetController.delete('/:snippetId', isAuth, async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
     const userId = req.user?.id;
 
     try {
         const snippet = await snippetService.getOne(snippetId)
 
+        if (!snippet) {
+            res.status(404).json({ error: 'Snippet not found!' })
+            return
+        }
+
         if (snippet.creator.toString() !== userId) {
-            return res.status(403).json({ error: 'Unauthorized!' })
+            res.status(403).json({ error: 'Unauthorized!' })
+            return
         }
 
         await snippetService.deleteSnippet(snippetId)
 
         res.status(200).json({ message: 'Snippet deleted successfully!' });
     } catch (err) {
-        res.status(404).json({ error: err.message })
+        res.status(404).json({ error: err instanceof Error ? err.message : 'Failed to delete snippet' })
     }
 })
 
@@ -289,15 +299,15 @@ snippetController.delete('/:snippetId', isAuth, async (req, res) => {
  *       200:
  *         description: List of comments
  */
-snippetController.get('/:snippetId/comments', async (req, res) => {
-    const snippetId = req.params.snippetId;
+snippetController.get('/:snippetId/comments', async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
 
     try {
         const comments = await commentService.getAllComments(snippetId);
 
         res.status(200).json(comments)
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to fetch comments' })
     }
 })
 
@@ -329,16 +339,16 @@ snippetController.get('/:snippetId/comments', async (req, res) => {
  *       400:
  *         description: Validation error
  */
-snippetController.post('/:snippetId/comments', isAuth, validate(createCommentSchema), async (req, res) => {
-    const snippetId = req.params.snippetId;
+snippetController.post('/:snippetId/comments', isAuth, validate(createCommentSchema), async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
     const { text } = req.body;
 
     try {
-        const newComment = await commentService.createComment(snippetId, { text, creator: req.user.id })
+        const newComment = await commentService.createComment(snippetId, { text, creator: req.user!.id })
 
         res.status(201).json(newComment)
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to create comment' })
     }
 })
 
@@ -365,19 +375,20 @@ snippetController.post('/:snippetId/comments', isAuth, validate(createCommentSch
  *       404:
  *         description: Comment not found
  */
-snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req, res) => {
-    const commentId = req.params.commentId;
+snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req: Request, res: Response) => {
+    const commentId = req.params.commentId as string;
 
     try {
         const commentDeleted = await commentService.deleteComment(commentId)
 
         if (!commentDeleted) {
-            return res.status(404).json({ message: 'Comment not found!' })
+            res.status(404).json({ message: 'Comment not found!' })
+            return
         }
 
         res.status(200).json({ message: 'Comment deleted successfully!' })
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: err instanceof Error ? err.message : 'Failed to delete comment' })
     }
 })
 
@@ -400,15 +411,15 @@ snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req, 
  *       500:
  *         description: Server error
  */
-snippetController.post('/:snippetId/likes', isAuth, async (req, res) => {
-    const { snippetId } = req.params
+snippetController.post('/:snippetId/likes', isAuth, async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string
     const userId = req.user?.id
 
     try {
-        const result = await likesService.toggleLike(snippetId, userId)
+        const result = await likesService.toggleLike(snippetId, userId!)
         res.status(200).json(result)
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: err instanceof Error ? err.message : 'Failed to toggle like' })
     }
 })
 

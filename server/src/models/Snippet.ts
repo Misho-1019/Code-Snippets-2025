@@ -1,6 +1,16 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, Types, model, Document } from "mongoose";
 
-const snippetSchema = new Schema({
+export interface ISnippet extends Document {
+    title: string;
+    description: string;
+    code: string;
+    language: string;
+    creator: Types.ObjectId;
+    createdAt: Date;
+    likes: Types.ObjectId[];
+}
+
+const snippetSchema = new Schema<ISnippet>({
     title: {
         type: String,
         required: [true, 'Title is required!'],
@@ -19,7 +29,7 @@ const snippetSchema = new Schema({
         required: [true, 'Language is required!'],
     },
     creator: {
-        type: Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'Creator is required!']
     },
@@ -28,11 +38,11 @@ const snippetSchema = new Schema({
         default: Date.now,
     },
     likes: [{
-        type: Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
     }]
 })
 
-const Snippet = model('Snippet', snippetSchema);
+const Snippet = model<ISnippet>('Snippet', snippetSchema);
 
 export default Snippet
