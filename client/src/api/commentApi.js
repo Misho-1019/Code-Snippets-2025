@@ -35,11 +35,8 @@ export const useComments = (snippetId) => {
 export const useCreateComments = () => {
     const { request } = useAuth();
 
-    const create = (snippetId, text, creator) => {
-        const commentData = {
-            text,
-            creator,
-        }
+    const create = (snippetId, text) => {
+        const commentData = { text }
 
         return request.post(`${baseUrl}/${snippetId}/comments`, commentData)
     }

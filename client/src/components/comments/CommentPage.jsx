@@ -17,7 +17,7 @@ export default function CommentsPage() {
     }, [comments])
 
     const commentCreateHandler = async (newComment) => {
-        const createdComment = await create(snippetId, newComment, userId)
+        const createdComment = await create(snippetId, newComment)
 
         setCommentList(prev => [...prev, createdComment])
     }

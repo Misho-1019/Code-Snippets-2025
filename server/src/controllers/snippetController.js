@@ -15,9 +15,9 @@ snippetController.get('/', async (req, res) => {
 
     const filter = {};
 
-    if (title) filter.title;
-    if (description) filter.description;
-    if (language) filter.language;
+    if (title) filter.title = title;
+    if (description) filter.description = description;
+    if (language) filter.language = language;
 
     try {
         const [snippets, totalCount] = await Promise.all([
@@ -60,10 +60,10 @@ snippetController.get('/:snippetId', async (req, res) => {
         const snippet = await snippetService.getOne(snippetId)
 
         if (!snippet) {
-            res.status(404).json({ error: 'Snippet not found!' })
+            return res.status(404).json({ error: 'Snippet not found!' })
         }
 
-        res.status(200).json(snippet)
+        return res.status(200).json(snippet)
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ error: 'Failed to fetch snippet!' })
@@ -166,14 +166,14 @@ snippetController.post('/:snippetId/comments', isAuth, [
     body('text').notEmpty().withMessage('Comment is required!')
 ], async (req, res) => {
     const snippetId = req.params.snippetId;
-    const { text, creator } = req.body;
+    const { text } = req.body;
 
-    if (!text || !creator) {
-        return res.status(404).json({message: 'Text and creator are required to post a comment!'})
+    if (!text) {
+        return res.status(400).json({ message: 'Comment text is required!' })
     }
 
     try {
-        const newComment = await commentService.createComment(snippetId, { text, creator })
+        const newComment = await commentService.createComment(snippetId, { text, creator: req.user.id })
 
         res.status(201).json(newComment)
     } catch (error) {
