@@ -63,7 +63,15 @@ const generalLimiter = rateLimit({
     message: 'Too many request from this IP, please try again!',
 })
 
+const mutationLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    message: 'Too many mutations from this IP, please try again!',
+    skip: (req) => req.method === 'GET',
+})
+
 app.use('/auth', authLimiter)
+app.use('/snippets', mutationLimiter)
 app.use(generalLimiter)
 app.use(authMiddleware)
 app.use(routes)

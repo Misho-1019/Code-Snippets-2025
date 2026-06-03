@@ -28,19 +28,24 @@ const request = async (method: RequestMethod, url: string, data?: unknown, optio
     }
 
     const response = await fetch(url, options as RequestInit)
-    const responseContentType = response.headers.get('Content-Type')
-
-    if (!responseContentType) {
-        return
-    }
 
     if (!response.ok) {
-        const result = await response.json()
-        throw result
+        let errorResult: unknown
+        try {
+            errorResult = await response.json()
+        } catch {
+            errorResult = { message: `HTTP ${response.status}: ${response.statusText}` }
+        }
+        throw errorResult
     }
 
-    const result = await response.json()
-    return result
+    const contentType = response.headers.get('Content-Type')
+    if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        return text || null
+    }
+
+    return await response.json()
 }
 
 export default {

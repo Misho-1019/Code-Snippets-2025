@@ -20,15 +20,7 @@ export default function useAuth(): UseAuthReturn {
     const authData = useContext(UserContext)
 
     const requestWrapper = (method: string, url: string, data?: unknown, options: Record<string, unknown> = {}): Promise<unknown> => {
-        const optionWrapper = {
-            ...options,
-            headers: {
-                'X-Authorization': authData.token,
-                ...(options.headers as Record<string, string> || {}),
-            }
-        }
-
-        return request.baseRequest(method as 'GET' | 'POST' | 'PUT' | 'DELETE', url, data, optionWrapper)
+        return request.baseRequest(method as 'GET' | 'POST' | 'PUT' | 'DELETE', url, data, options)
     }
 
     return {

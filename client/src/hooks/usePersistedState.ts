@@ -8,7 +8,11 @@ export default function usePersistedState<T>(stateKey: string, initialState: T):
             return typeof initialState === 'function' ? (initialState as () => T)() : initialState
         }
 
-        return JSON.parse(persistedState) as T
+        try {
+            return JSON.parse(persistedState) as T
+        } catch {
+            return typeof initialState === 'function' ? (initialState as () => T)() : initialState
+        }
     })
 
     const setPersistedState = (input: T | ((prev: T) => T)): void => {

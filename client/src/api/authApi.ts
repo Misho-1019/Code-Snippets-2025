@@ -6,7 +6,6 @@ import type { AuthData } from "../types";
 const baseUrl = 'http://localhost:3030/auth'
 
 export const useLogin = () => {
-    const { token } = useContext(UserContext)
     const abortRef = useRef(new AbortController());
 
     const login = async (email: string, password: string): Promise<AuthData> => {
@@ -30,18 +29,14 @@ export const useRegister = () => {
 }
 
 export const useLogout = () => {
-    const { token, userLogoutHandler } = useContext(UserContext);
+    const { email, userLogoutHandler } = useContext(UserContext);
 
     useEffect(() => {
-        if (!token) return;
+        if (!email) return;
 
-        const options = {
-            headers: { 'X-Authorization': token }
-        }
-
-        request.get(`${baseUrl}/logout`, null, options)
+        request.get(`${baseUrl}/logout`)
             .finally(userLogoutHandler)
-    }, [token, userLogoutHandler])
+    }, [email, userLogoutHandler])
 
-    return { isLoggedOut: !!token }
+    return { isLoggedOut: !email }
 }

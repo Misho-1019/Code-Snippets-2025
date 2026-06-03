@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
+import request from "../utils/request";
 import type { Comment } from "../types";
 
 const baseUrl = 'http://localhost:3030/snippets';
 
 export const useComments = (snippetId: string) => {
-    const { request: authRequest } = useAuth()
     const [comments, setComments] = useState<Comment[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<unknown>(null)
@@ -14,7 +14,7 @@ export const useComments = (snippetId: string) => {
         setIsLoading(true)
         setError(null)
 
-        authRequest.get(`${baseUrl}/${snippetId}/comments`)
+        request.get(`${baseUrl}/${snippetId}/comments`)
             .then(data => {
                 setComments(data as Comment[])
                 setIsLoading(false)

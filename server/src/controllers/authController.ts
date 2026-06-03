@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import authService from "../services/authService.js";
+import User from "../models/User.js";
 import { isAuth, isGuest } from "../middlewares/authMiddleware.js";
 import { registerSchema, loginSchema, validate } from "../validators/authValidator.js";
 
@@ -76,6 +77,37 @@ authController.post('/login', isGuest, validate(loginSchema), async (req: Reques
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Login failed'
         res.status(400).json({ message }).end()
+    }
+})
+
+/**
+ * @openapi
+ * /auth/me:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Get current authenticated user
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user data
+ *       401:
+ *         description: Unauthorized
+ */
+authController.get('/me', isAuth, async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.user!.id).select('-password')
+        if (!user) {
+            res.status(404).json({ message: 'User not found' })
+            return
+        }
+        res.json({
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+        })
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch user' })
     }
 })
 
