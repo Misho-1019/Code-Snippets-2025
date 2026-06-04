@@ -36,6 +36,10 @@ const snippetController = Router();
  *       - in: query
  *         name: description
  *         schema: { type: string }
+ *       - in: query
+ *         name: search
+ *         schema: { type: string }
+ *         description: Full-text search against title and description
  *     responses:
  *       200:
  *         description: Paginated list of snippets

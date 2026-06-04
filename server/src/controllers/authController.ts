@@ -91,6 +91,14 @@ authController.post('/login', isGuest, validate(loginSchema), async (req: Reques
  *     responses:
  *       200:
  *         description: Current user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id: { type: string }
+ *                 email: { type: string }
+ *                 username: { type: string }
  *       401:
  *         description: Unauthorized
  */

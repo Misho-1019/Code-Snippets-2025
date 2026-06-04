@@ -16,6 +16,7 @@ import { swaggerSpec } from './utils/swagger.js';
 import routes from "./routes.js";
 import { authMiddleware } from './middlewares/authMiddleware.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { csrfProtection } from './middlewares/csrfMiddleware.js';
 
 const requiredEnvVars = ['JWT_SECRET', 'MONGO_URI']
 for (const envVar of requiredEnvVars) {
@@ -73,6 +74,7 @@ const mutationLimiter = rateLimit({
 app.use('/auth', authLimiter)
 app.use('/snippets', mutationLimiter)
 app.use(generalLimiter)
+app.use(csrfProtection)
 app.use(authMiddleware)
 app.use(routes)
 app.use(errorHandler)

@@ -2,8 +2,17 @@ import { describe, it, expect } from 'vitest'
 import request from 'supertest'
 import { createTestApp } from './app.js'
 import { createTestSnippet, createTestUser } from './helpers.js'
+import Snippet from '../models/Snippet.js'
+import Comment from '../models/Comment.js'
 
 const app = createTestApp()
+
+const registerAndGetCookie = async () => {
+    const res = await request(app)
+        .post('/auth/register')
+        .send({ username: 'user', email: 'u@example.com', password: 'password123' })
+    return res.headers['set-cookie']
+}
 
 describe('Snippet Endpoints', () => {
 
@@ -220,6 +229,88 @@ describe('Snippet Endpoints', () => {
                 .set('Cookie', user2.headers['set-cookie'])
 
             expect(res.status).toBe(403)
+        })
+    })
+
+    describe('Pagination boundaries', () => {
+        it('should reject page 0 as invalid', async () => {
+            const res = await request(app).get('/snippets?page=0')
+            expect(res.status).toBe(400)
+        })
+
+        it('should reject negative page as invalid', async () => {
+            const res = await request(app).get('/snippets?page=-1')
+            expect(res.status).toBe(400)
+        })
+
+        it('should return empty array for out-of-range page', async () => {
+            const user = await createTestUser()
+            await createTestSnippet(user._id as string)
+
+            const res = await request(app).get('/snippets?page=999')
+            expect(res.status).toBe(200)
+            expect(res.body.snippets).toEqual([])
+        })
+    })
+
+    describe('Cascade delete', () => {
+        it('should delete comments when snippet is deleted', async () => {
+            const registerRes = await request(app)
+                .post('/auth/register')
+                .send({ username: 'cascadeuser', email: 'cascade@example.com', password: 'password123' })
+            const cookie = registerRes.headers['set-cookie']
+            const userId = registerRes.body._id
+
+            const snippet = await createTestSnippet(userId)
+            expect(snippet).toBeDefined()
+
+            await request(app)
+                .post(`/snippets/${snippet._id}/comments`)
+                .set('Cookie', cookie)
+                .send({ text: 'Comment to cascade' })
+
+            const deleteRes = await request(app)
+                .delete(`/snippets/${snippet._id}`)
+                .set('Cookie', cookie)
+
+            expect(deleteRes.status).toBe(200)
+
+            const remainingComments = await Comment.find({ snippetId: snippet._id })
+            expect(remainingComments).toHaveLength(0)
+        })
+    })
+
+    describe('Text search', () => {
+        it('should find snippets matching search text', async () => {
+            const user = await createTestUser()
+            await Snippet.create({
+                title: 'React Hooks Guide',
+                description: 'A comprehensive guide to React hooks',
+                code: 'useState()',
+                language: 'JavaScript',
+                creator: user._id,
+            })
+            await Snippet.create({
+                title: 'Python Basics',
+                description: 'Learn Python fundamentals',
+                code: 'print("hello")',
+                language: 'Python',
+                creator: user._id,
+            })
+
+            const res = await request(app).get('/snippets?search=React')
+            expect(res.status).toBe(200)
+            expect(res.body.snippets).toHaveLength(1)
+            expect(res.body.snippets[0].title).toBe('React Hooks Guide')
+        })
+
+        it('should return empty list for non-matching search', async () => {
+            const user = await createTestUser()
+            await createTestSnippet(user._id as string)
+
+            const res = await request(app).get('/snippets?search=NonExistentTerm')
+            expect(res.status).toBe(200)
+            expect(res.body.snippets).toHaveLength(0)
         })
     })
 })

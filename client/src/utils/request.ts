@@ -1,3 +1,10 @@
+function getCookie(name: string): string | undefined {
+    const value = `; ${document.cookie}`
+    const parts = value.split(`; ${name}=`)
+    if (parts.length === 2) return parts.pop()?.split(';').shift()
+    return undefined
+}
+
 interface RequestOptions {
     headers?: Record<string, string>
     signal?: AbortSignal
@@ -11,15 +18,21 @@ const request = async (method: RequestMethod, url: string, data?: unknown, optio
         options.method = method
     }
 
+    const csrfToken = getCookie('csrf-token')
+    const headers: Record<string, string> = {
+        ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+        ...options.headers,
+    }
+
     if (data) {
+        headers['Content-Type'] = 'application/json'
         options = {
             ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
-            },
+            headers,
             body: JSON.stringify(data),
         }
+    } else {
+        options = { ...options, headers }
     }
 
     options = {
