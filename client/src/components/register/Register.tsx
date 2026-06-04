@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
 
 const schema = yup.object({
-    username: yup.string().required('Username is required!'),
+    username: yup.string().min(2, 'Username must be at least 2 characters').required('Username is required!'),
     email: yup.string().email('Invalid email format!').required('Email is required!'),
     password: yup.string().min(6, 'Password must be at least 6 characters!').required('Password is required!'),
     confirmPassword: yup.string().oneOf([yup.ref('password')], 'Password must match!').required('Confirm password is required!'),
