@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
+import { mongoSanitize } from "./middlewares/mongoSanitize.js";
 import morgan from "morgan";
 
 import swaggerUi from 'swagger-ui-express';
@@ -29,7 +29,6 @@ for (const envVar of requiredEnvVars) {
 const app = express();
 
 app.use(helmet())
-app.use(mongoSanitize())
 app.use(morgan('dev'))
 
 app.use(cors({
@@ -51,6 +50,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(mongoSanitize)
 
 const authLimiter = rateLimit({
     windowMs: 60 * 1000,

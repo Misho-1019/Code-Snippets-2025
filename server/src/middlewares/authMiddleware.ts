@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET as string;
-
 export interface JwtPayload {
     id: string;
     email: string;
@@ -22,7 +20,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
     if (!token) return next();
 
     try {
-        const decodedToken = jwt.verify(token, SECRET) as JwtPayload
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
 
         req.user = decodedToken;
         res.locals.user = decodedToken;
