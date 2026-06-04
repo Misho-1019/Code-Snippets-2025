@@ -1,7 +1,7 @@
 import useAuth from "../hooks/useAuth";
 import type { LikeResult } from "../types";
 
-const baseUrl = 'http://localhost:3030/snippets';
+const baseUrl = '/snippets';
 
 export const useToggleLike = () => {
     const { request: authRequest } = useAuth()

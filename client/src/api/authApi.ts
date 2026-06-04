@@ -3,7 +3,7 @@ import request from "../utils/request"
 import { UserContext } from "../context/UserContext";
 import type { AuthData } from "../types";
 
-const baseUrl = 'http://localhost:3030/auth'
+const baseUrl = '/auth'
 
 export const useLogin = () => {
     const abortRef = useRef(new AbortController());

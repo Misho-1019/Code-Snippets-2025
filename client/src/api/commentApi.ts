@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import request from "../utils/request";
 import type { Comment } from "../types";
 
-const baseUrl = 'http://localhost:3030/snippets';
+const baseUrl = '/snippets';
 
 export const useComments = (snippetId: string) => {
     const [comments, setComments] = useState<Comment[]>([])

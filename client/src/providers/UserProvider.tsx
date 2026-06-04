@@ -15,7 +15,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [authData, setAuthData] = useState<AuthData>(initialAuthState)
 
     useEffect(() => {
-        request.get('http://localhost:3030/auth/me')
+        request.get('/auth/me')
             .then(data => {
                 const user = data as { _id: string; email: string; username: string }
                 setAuthData({ ...user, token: '' })

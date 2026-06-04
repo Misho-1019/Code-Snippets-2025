@@ -3,7 +3,7 @@ import request from "../utils/request"
 import useAuth from "../hooks/useAuth"
 import type { Snippet, PaginatedResponse } from "../types"
 
-const baseUrl = 'http://localhost:3030/snippets'
+const baseUrl = '/snippets'
 
 export const useSnippets = (queryParams?: Record<string, string | number>) => {
     const [snippets, setSnippets] = useState<Snippet[]>([])
