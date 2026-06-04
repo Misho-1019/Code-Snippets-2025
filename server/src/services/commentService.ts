@@ -7,7 +7,7 @@ export interface CommentData {
 
 export default {
     getAllComments(snippetId: string) {
-        return Comment.find({snippetId})
+        return Comment.find({snippetId}).populate('creator', 'username')
     },
     async createComment(snippetId: string, commentData: CommentData) {
         const newComment = await Comment.create({

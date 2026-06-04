@@ -34,7 +34,7 @@ export default function Login() {
             const authData = await login(data.email, data.password)
             userLoginHandler(authData)
             showToast('Successful login!', 'success')
-            navigate(-1)
+            navigate('/')
         } catch (error) {
             showToast((error as Error).message, 'error')
         }

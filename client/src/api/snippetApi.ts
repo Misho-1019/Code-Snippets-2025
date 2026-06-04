@@ -7,8 +7,13 @@ const baseUrl = '/snippets'
 
 export const useSnippets = (queryParams?: Record<string, string | number>) => {
     const [snippets, setSnippets] = useState<Snippet[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState<unknown>(null)
 
     useEffect(() => {
+        setIsLoading(true)
+        setError(null)
+
         const params = queryParams ? '?' + new URLSearchParams(
             Object.entries(queryParams).map(([k, v]) => [k, String(v)])
         ).toString() : ''
@@ -17,10 +22,15 @@ export const useSnippets = (queryParams?: Record<string, string | number>) => {
             .then(res => {
                 const data = res as PaginatedResponse
                 setSnippets(data.snippets)
+                setIsLoading(false)
+            })
+            .catch(err => {
+                setError(err)
+                setIsLoading(false)
             })
     }, [queryParams])
 
-    return { snippets }
+    return { snippets, isLoading, error }
 }
 
 export const useLatestSnippets = () => {

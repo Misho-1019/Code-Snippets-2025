@@ -12,7 +12,7 @@ export interface Snippet {
 export interface Comment {
     _id: string
     text: string
-    creator: string
+    creator: string | { _id: string; username: string }
     snippetId: string
     createdAt: string
 }

@@ -6,7 +6,7 @@ import { showToast } from "../../utils/toastUtils";
 import type { Comment } from "../../types";
 
 export default function CommentsPage() {
-    const { username, email, userId } = useAuth()
+    const { email, userId } = useAuth()
     const { snippetId } = useParams<{ snippetId: string }>()
     const { comments } = useComments(snippetId || '')
     const { create } = useCreateComments()
@@ -74,12 +74,15 @@ export default function CommentsPage() {
 
                     <div className="space-y-6">
                         {commentList.length > 0
-                            ? (commentList.map(({ _id, text, creator }) => (
+                            ? (commentList.map(({ _id, text, creator }) => {
+                                const commenterName = typeof creator === 'object' ? creator.username : 'Unknown'
+                                const creatorId = typeof creator === 'object' ? creator._id : creator
+                                return (
                                 <div className="p-4 border border-indigo-200 rounded-lg shadow-md bg-indigo-100" key={_id}>
                                     <p className="text-sm text-indigo-900">{text}</p>
                                     <div className="flex justify-between items-center mt-4">
-                                        <p className="text-xs text-indigo-700 italic">By {username}</p>
-                                        {userId === creator ? (
+                                        <p className="text-xs text-indigo-700 italic">By {commenterName}</p>
+                                        {userId === creatorId ? (
                                             <div className="flex space-x-2">
                                                 <button
                                                     className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
@@ -90,7 +93,8 @@ export default function CommentsPage() {
                                         ) : null}
                                     </div>
                                 </div>
-                            )))
+                            )
+                            }))
                             : (
                                 <p className="text-gray-500 italic bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                                     No comments yet. Be the first to share your thoughts!
