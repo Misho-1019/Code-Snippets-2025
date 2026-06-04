@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>({
         required: true,
         unique: true,
         lowercase: true,
-        match: /\@[a-zA-Z]+.[a-zA-Z]+$/,
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         minLength: 6,
     },
     password: {

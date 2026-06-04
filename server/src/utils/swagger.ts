@@ -8,7 +8,7 @@ const options: swaggerJsdoc.Options = {
             version: '1.0.0',
             description: 'Full-stack code snippet manager API',
         },
-        servers: [{ url: `http://localhost:${process.env.PORT || 3030}` }],
+        servers: [{ url: process.env.SWAGGER_SERVER_URL || `http://localhost:${process.env.PORT || 3030}` }],
         components: {
             securitySchemes: {
                 cookieAuth: {

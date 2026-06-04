@@ -20,4 +20,7 @@ export default {
     deleteComment(commentId: string) {
         return Comment.findByIdAndDelete(commentId)
     },
+    deleteBySnippetId(snippetId: string) {
+        return Comment.deleteMany({ snippetId })
+    },
 }

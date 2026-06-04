@@ -43,6 +43,8 @@ const snippetSchema = new Schema<ISnippet>({
     }]
 })
 
+snippetSchema.index({ title: 'text', description: 'text' }, { language_override: 'lang' })
+
 const Snippet = model<ISnippet>('Snippet', snippetSchema);
 
 export default Snippet

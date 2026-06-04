@@ -22,8 +22,7 @@ export const createCommentSchema = z.object({
 export const paginationSchema = z.object({
     page: z.coerce.number().positive().optional(),
     limit: z.coerce.number().positive().max(100).optional(),
-    title: z.string().optional(),
-    description: z.string().optional(),
+    search: z.string().optional(),
     language: z.string().optional(),
 })
 

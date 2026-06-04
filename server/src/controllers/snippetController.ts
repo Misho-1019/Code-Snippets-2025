@@ -46,12 +46,11 @@ snippetController.get('/', validateQuery(paginationSchema), async (req: Request,
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const { title, description, language } = req.query as Record<string, string | undefined>
+    const { search, language } = req.query as Record<string, string | undefined>
 
-    const filter: Record<string, string> = {};
+    const filter: Record<string, unknown> = {};
 
-    if (title) filter.title = title;
-    if (description) filter.description = description;
+    if (search) filter.$text = { $search: search };
     if (language) filter.language = language;
 
     try {
@@ -276,7 +275,10 @@ snippetController.delete('/:snippetId', isAuth, async (req: Request, res: Respon
             return
         }
 
-        await snippetService.deleteSnippet(snippetId)
+        await Promise.all([
+            commentService.deleteBySnippetId(snippetId),
+            snippetService.deleteSnippet(snippetId),
+        ])
 
         res.status(200).json({ message: 'Snippet deleted successfully!' });
     } catch (err) {

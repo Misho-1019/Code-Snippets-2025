@@ -7,12 +7,12 @@ export interface SnippetQuery {
 }
 
 export default {
-    getAll(page = 1, limit = 10, filter: Record<string, string> = {}) {
+    getAll(page = 1, limit = 10, filter: Record<string, unknown> = {}) {
         const skip = (page - 1) * limit;
 
         return Snippet.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
     },
-    getTotalCount(filter: Record<string, string> = {}) {
+    getTotalCount(filter: Record<string, unknown> = {}) {
         return Snippet.countDocuments(filter)
     },
     getLatest({ sortBy, order, pageSize }: SnippetQuery) {
