@@ -45,7 +45,7 @@ export default function Register() {
     }
 
     return (
-        <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-surface-900 px-4 py-12">
+        <main className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
             <div className="w-full max-w-md bg-white dark:bg-surface-800 p-8 shadow-md rounded-2xl">
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center mb-6">Create an Account</h2>
                 <form className="space-y-4" onSubmit={handleSubmit(registerHandler)} noValidate>

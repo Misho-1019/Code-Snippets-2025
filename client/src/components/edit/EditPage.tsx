@@ -64,7 +64,8 @@ export default function EditSnippet() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
+        <div className="min-h-screen py-12 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
+            <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
             <Breadcrumbs items={[
                 { label: 'Snippets', href: '/snippets' },
                 { label: snippet.title, href: `/snippets/${snippetId}/details` },
@@ -108,6 +109,7 @@ export default function EditSnippet() {
                     </button>
                 </div>
             </form>
+            </div>
         </div>
     );
 }

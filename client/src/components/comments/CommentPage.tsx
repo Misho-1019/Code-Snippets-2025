@@ -44,7 +44,7 @@ export default function CommentsPage() {
     }
 
     return (
-        <main className="bg-gray-50 dark:bg-surface-900 min-h-screen py-16 px-6">
+        <main className="min-h-screen py-16 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
             <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">Comments</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
