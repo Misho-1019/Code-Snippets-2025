@@ -8,6 +8,7 @@ import { FaHeart, FaRegHeart, FaCopy } from "react-icons/fa";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight, oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Spinner from "../Spinner";
+import SkeletonDetails from "../SkeletonDetails";
 import Breadcrumbs from "../Breadcrumbs";
 import ConfirmModal from "../ConfirmModal";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -40,7 +41,7 @@ export default function SnippetDetails() {
         }
     }, [showDeleteModal])
 
-    if (isLoading) return <Spinner className="mt-20" size="lg" />
+    if (isLoading) return <SkeletonDetails />
     if (!snippet) return <div className="text-center mt-10 text-gray-500 dark:text-gray-400">Snippet not found.</div>
 
     const snippetDeleteClickHandler = async () => {
@@ -134,7 +135,7 @@ export default function SnippetDetails() {
                     <button
                         onClick={likeHandler}
                         aria-label={likedByUser ? 'Unlike this snippet' : 'Like this snippet'}
-                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
+                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors active:scale-95 ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
                     >
                         {likedByUser ? <FaHeart /> : <FaRegHeart />}
                         {likesCount} {likesCount === 1 ? "Like" : "Likes"}

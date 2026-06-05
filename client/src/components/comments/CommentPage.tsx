@@ -66,7 +66,7 @@ export default function CommentsPage() {
                                 rows={4}
                             />
                             <button type="submit"
-                                className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 transition-colors">
+                                className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 active:scale-95 transition-colors">
                                 Add Comment
                             </button>
                         </form>
@@ -89,7 +89,7 @@ export default function CommentsPage() {
                                         {userId === creatorId ? (
                                             <div className="flex space-x-2">
                                                 <button
-                                                    className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 transition duration-200"
+                                                    className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 active:scale-95 transition duration-200"
                                                     onClick={() => commentDeleteHandler(_id)}>
                                                     Delete
                                                 </button>

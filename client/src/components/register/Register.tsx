@@ -71,7 +71,7 @@ export default function Register() {
                         <input type="password" aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined} className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('confirmPassword')} placeholder="Repeat password..." />
                         {errors.confirmPassword && (<p id="confirmPassword-error" className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>)}
                     </div>
-                    <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 transition" disabled={isSubmitting}>
+                    <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 active:scale-95 transition" disabled={isSubmitting}>
                         {isSubmitting ? 'Registering...' : 'Register'}
                     </button>
                 </form>

@@ -59,7 +59,7 @@ export default function SnippetList() {
                             />
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-primary-600 text-white text-sm rounded-md hover:bg-primary-700 transition"
+                                className="px-4 py-2 bg-primary-600 text-white text-sm rounded-md hover:bg-primary-700 active:scale-95 transition"
                             >
                                 Search
                             </button>
@@ -104,7 +104,7 @@ export default function SnippetList() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p className="text-red-500 text-lg">Failed to load snippets.</p>
-                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">
+                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
                             Try Again
                         </button>
                     </div>
@@ -136,7 +136,7 @@ export default function SnippetList() {
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage <= 1}
-                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 transition"
+                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 active:scale-95 transition"
                                 >
                                     Prev
                                 </button>
@@ -144,7 +144,7 @@ export default function SnippetList() {
                                     <button
                                         key={p}
                                         onClick={() => handlePageChange(p)}
-                                        className={`px-3 py-2 text-sm rounded-md transition ${
+                                        className={`px-3 py-2 text-sm rounded-md transition active:scale-95 ${
                                             p === currentPage
                                                 ? 'bg-primary-600 text-white'
                                                 : 'bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-surface-600'
@@ -156,7 +156,7 @@ export default function SnippetList() {
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage >= totalPages}
-                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 transition"
+                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 active:scale-95 transition"
                                 >
                                     Next
                                 </button>

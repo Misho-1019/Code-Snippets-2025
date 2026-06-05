@@ -10,7 +10,7 @@ interface ItemCatalogProps {
 
 export default function ItemCatalog({ _id, title, language, description, code }: ItemCatalogProps) {
     return (
-        <div className="bg-white dark:bg-surface-800 shadow-md rounded-xl p-6 flex flex-col justify-between hover:shadow-lg transition-shadow">
+        <div className="bg-white dark:bg-surface-800 shadow-md rounded-xl p-6 flex flex-col justify-between hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
             <div>
                 <h3 className="text-xl font-semibold text-primary-600 dark:text-primary-300 mb-2">
                     {title}

@@ -32,7 +32,7 @@ export default function CreateSnippet() {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, touchedFields },
     } = useForm<CreateForm>({
         resolver: yupResolver(schema),
     })
@@ -62,39 +62,39 @@ export default function CreateSnippet() {
                 <form className="space-y-6" onSubmit={handleSubmit(submitHandler)} noValidate>
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                        <input type="text" id="title" aria-describedby={errors.title ? 'title-error' : undefined} {...register('title')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                        <input type="text" id="title" aria-invalid={!!errors.title} aria-describedby={errors.title ? 'title-error' : undefined} {...register('title')}
+                            className={`mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.title ? 'border-red-500' : touchedFields.title ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
                             placeholder="Snippet title" />
                         {errors.title && <p id="title-error" className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                     </div>
 
                     <div>
                         <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                        <textarea id="description" rows={3} aria-describedby={errors.description ? 'description-error' : undefined} {...register('description')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                        <textarea id="description" rows={3} aria-invalid={!!errors.description} aria-describedby={errors.description ? 'description-error' : undefined} {...register('description')}
+                            className={`mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.description ? 'border-red-500' : touchedFields.description ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
                             placeholder="Brief description of your snippet" />
                         {errors.description && <p id="description-error" className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                     </div>
 
                     <div>
                         <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Code</label>
-                        <textarea id="code" rows={6} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
-                            className="mt-1 block w-full font-mono px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                        <textarea id="code" rows={6} aria-invalid={!!errors.code} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
+                            className={`mt-1 block w-full font-mono px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.code ? 'border-red-500' : touchedFields.code ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
                             placeholder="Paste your code here" />
                         {errors.code && <p id="code-error" className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
                     </div>
 
                     <div>
                         <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Language</label>
-                        <input type="text" id="language" aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                        <input type="text" id="language" aria-invalid={!!errors.language} aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
+                            className={`mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.language ? 'border-red-500' : touchedFields.language ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
                             placeholder="e.g., JavaScript, Python" />
                         {errors.language && <p id="language-error" className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
                     </div>
 
                     <div className="pt-4">
                         <button type="submit" disabled={isSubmitting}
-                            className="w-full md:w-auto px-6 py-2 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 transition disabled:opacity-50">
+                            className="w-full md:w-auto px-6 py-2 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 active:scale-95 transition disabled:opacity-50">
                             {isSubmitting ? 'Creating...' : 'Create Snippet'}
                         </button>
                     </div>

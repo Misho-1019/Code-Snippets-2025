@@ -37,7 +37,7 @@ export default function EditSnippet() {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, touchedFields },
     } = useForm<EditForm>({
         resolver: yupResolver(schema),
         values: snippet ? {
@@ -81,35 +81,35 @@ export default function EditSnippet() {
             <form className="space-y-5" onSubmit={handleSubmit(submitHandler)} noValidate>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
-                    <input type="text" aria-describedby={errors.title ? 'title-error' : undefined} {...register('title')}
-                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
+                    <input type="text" aria-invalid={!!errors.title} aria-describedby={errors.title ? 'title-error' : undefined} {...register('title')}
+                        className={`w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.title ? 'border-red-500' : touchedFields.title ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
                     {errors.title && <p id="title-error" className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                    <textarea rows={3} aria-describedby={errors.description ? 'description-error' : undefined} {...register('description')}
-                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
+                    <textarea rows={3} aria-invalid={!!errors.description} aria-describedby={errors.description ? 'description-error' : undefined} {...register('description')}
+                        className={`w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.description ? 'border-red-500' : touchedFields.description ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
                     {errors.description && <p id="description-error" className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
-                    <textarea rows={6} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
-                        className="w-full font-mono border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
+                    <textarea rows={6} aria-invalid={!!errors.code} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
+                        className={`w-full font-mono border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.code ? 'border-red-500' : touchedFields.code ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
                     {errors.code && <p id="code-error" className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
-                    <input type="text" aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
-                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
+                    <input type="text" aria-invalid={!!errors.language} aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
+                        className={`w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.language ? 'border-red-500' : touchedFields.language ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
                     {errors.language && <p id="language-error" className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
                 </div>
 
                 <div className="text-right">
                     <button type="submit" disabled={isSubmitting}
-                        className="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition disabled:opacity-50">
+                        className="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition disabled:opacity-50">
                         {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>

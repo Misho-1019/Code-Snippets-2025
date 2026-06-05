@@ -23,10 +23,10 @@ export default function Home() {
                     Your personal code snippet manager. Save, search, and share your favorite code bits with ease.
                 </p>
                 <div className="flex justify-center gap-4 mb-12">
-                    <button onClick={() => navigate('/snippets')} className="bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition">
+                    <button onClick={() => navigate('/snippets')} className="bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 active:scale-95 transition">
                         Get Started
                     </button>
-                    <button onClick={scrollToLatest} className="bg-white dark:bg-surface-800 border border-primary-600 text-primary-600 px-6 py-2 rounded-full hover:bg-indigo-50 dark:hover:bg-surface-700 transition">
+                    <button onClick={scrollToLatest} className="bg-white dark:bg-surface-800 border border-primary-600 text-primary-600 px-6 py-2 rounded-full hover:bg-indigo-50 dark:hover:bg-surface-700 active:scale-95 transition">
                         Learn More
                     </button>
                 </div>
@@ -41,7 +41,7 @@ export default function Home() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p>Failed to load snippets.</p>
-                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">
+                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
                             Try Again
                         </button>
                     </div>
@@ -60,7 +60,7 @@ export default function Home() {
                     {latestSnippets.map((snippet, i) => (
                         <div
                             key={snippet._id}
-                            className="bg-indigo-50 dark:bg-surface-800 border border-indigo-200 dark:border-surface-600 rounded-xl shadow-md p-6 hover:shadow-lg transition animate-fade-in-up"
+                            className="bg-indigo-50 dark:bg-surface-800 border border-indigo-200 dark:border-surface-600 rounded-xl shadow-md p-6 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 animate-fade-in-up"
                             style={{ animationDelay: `${i * 0.08}s` }}
                         >
                             <h4 className="text-lg font-semibold text-indigo-800 dark:text-primary-300 mb-2">{snippet.title}</h4>
@@ -72,7 +72,7 @@ export default function Home() {
                             </pre>
                             <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Language: {snippet.language}</p>
                             <div className="pt-4 flex justify-end gap-2">
-                                <Link to={`/snippets/${snippet._id}/details`} className="px-4 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
+                                <Link to={`/snippets/${snippet._id}/details`} className="px-4 py-1.5 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 active:scale-95 transition-colors">
                                     Details
                                 </Link>
                             </div>
