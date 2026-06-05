@@ -13,20 +13,20 @@ export default {
             throw new Error('Snippet not found!')
         }
 
-        const likes = snippet.likes as any
-        const hasLiked = likes.includes(userId)
+        const hasLiked = snippet.likes.some(id => id.toString() === userId)
 
-        if (hasLiked) {
-            likes.pull(userId)
-        }
-        else {
-            likes.push(userId)
-        }
+        const update = hasLiked
+            ? { $pull: { likes: userId } }
+            : { $addToSet: { likes: userId } }
 
-        await snippet.save()
+        const updated = await Snippet.findByIdAndUpdate(snippetId, update, { new: true })
+
+        if (!updated) {
+            throw new Error('Snippet not found!')
+        }
 
         return {
-            likesCount: snippet.likes.length,
+            likesCount: updated.likes.length,
             likedByUser: !hasLiked,
         }
     }

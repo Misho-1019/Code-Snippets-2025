@@ -16,7 +16,7 @@ export default function Home() {
     }
 
     return (
-        <main className="min-h-screen py-16 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
+        <div className="py-16 px-6">
             <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">Welcome to Code Snippet</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
@@ -80,6 +80,6 @@ export default function Home() {
                     ))}
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

@@ -10,6 +10,7 @@ interface ConfirmModalProps {
     onConfirm: () => void
     onCancel: () => void
     variant?: 'danger' | 'default'
+    isConfirming?: boolean
 }
 
 export default function ConfirmModal({
@@ -20,6 +21,7 @@ export default function ConfirmModal({
     cancelLabel = 'Cancel',
     onConfirm,
     onCancel,
+    isConfirming,
     variant = 'default',
 }: ConfirmModalProps) {
     const cancelRef = useRef<HTMLButtonElement>(null)
@@ -64,8 +66,9 @@ export default function ConfirmModal({
                         {cancelLabel}
                     </button>
                     <button
+                        disabled={isConfirming}
                         onClick={onConfirm}
-                        className={`px-4 py-2 text-sm rounded-md text-white transition ${
+                        className={`px-4 py-2 text-sm rounded-md text-white transition disabled:opacity-50 ${
                             variant === 'danger'
                                 ? 'bg-red-500 hover:bg-red-600'
                                 : 'bg-primary-600 hover:bg-primary-700 active:scale-95'

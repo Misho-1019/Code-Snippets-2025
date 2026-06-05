@@ -13,6 +13,10 @@ export default function SnippetList() {
 
     const [searchInput, setSearchInput] = useState(search)
 
+    useEffect(() => {
+        setSearchInput(search)
+    }, [search])
+
     const { snippets, totalPages, currentPage, isLoading, error } = useSnippets(search || undefined, language || undefined, page)
 
     useEffect(() => {
@@ -38,6 +42,20 @@ export default function SnippetList() {
 
     const handlePageChange = (newPage: number) => {
         updateParams({ page: String(newPage) })
+    }
+
+    const getPageNumbers = () => {
+        if (totalPages <= 7) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1)
+        }
+        const pages: (number | string)[] = [1]
+        const start = Math.max(2, currentPage - 1)
+        const end = Math.min(totalPages - 1, currentPage + 1)
+        if (start > 2) pages.push('...')
+        for (let i = start; i <= end; i++) pages.push(i)
+        if (end < totalPages - 1) pages.push('...')
+        pages.push(totalPages)
+        return pages
     }
 
     return (
@@ -140,18 +158,22 @@ export default function SnippetList() {
                                 >
                                     Prev
                                 </button>
-                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                                    <button
-                                        key={p}
-                                        onClick={() => handlePageChange(p)}
-                                        className={`px-3 py-2 text-sm rounded-md transition active:scale-95 ${
-                                            p === currentPage
-                                                ? 'bg-primary-600 text-white'
-                                                : 'bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-surface-600'
-                                        }`}
-                                    >
-                                        {p}
-                                    </button>
+                                {getPageNumbers().map(p => (
+                                    typeof p === 'string' ? (
+                                        <span key={p} className="px-2 py-2 text-sm text-gray-400">...</span>
+                                    ) : (
+                                        <button
+                                            key={p}
+                                            onClick={() => handlePageChange(p)}
+                                            className={`px-3 py-2 text-sm rounded-md transition active:scale-95 ${
+                                                p === currentPage
+                                                    ? 'bg-primary-600 text-white'
+                                                    : 'bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-surface-600'
+                                            }`}
+                                        >
+                                            {p}
+                                        </button>
+                                    )
                                 ))}
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}

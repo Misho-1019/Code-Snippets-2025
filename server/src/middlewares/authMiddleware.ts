@@ -28,7 +28,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
         next();
     } catch (error) {
         res.clearCookie('auth')
-        res.status(401).json({ message: 'Invalid token' })
+        next()
     }
 }
 

@@ -1,17 +1,22 @@
 import { useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useComments, useCreateComments, useDeleteComment } from "../../api/commentApi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { showToast } from "../../utils/toastUtils";
+import { useUserContext } from "../../context/UserContext";
 import type { Comment } from "../../types";
+import Spinner from "../Spinner";
 
 export default function CommentsPage() {
-    const { email, userId } = useAuth()
+    const { userId } = useAuth()
+    const { email } = useUserContext()
     const { snippetId } = useParams<{ snippetId: string }>()
     const { comments, isLoading, error } = useComments(snippetId || '')
     const { create } = useCreateComments()
     const { deleteComment } = useDeleteComment()
     const [commentList, setCommentList] = useState<Comment[]>([])
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const formRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
         document.title = 'Comments — Code Snippet'
@@ -28,12 +33,16 @@ export default function CommentsPage() {
 
     const commentAction = async (formData: FormData) => {
         const comment = formData.get('comment') as string
+        setIsSubmitting(true)
 
         try {
             await commentCreateHandler(comment)
             showToast('Comment added — thanks for sharing your thoughts!', 'success')
+            formRef.current?.reset()
         } catch (err) {
             showToast((err as Error).message, 'error')
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -58,22 +67,25 @@ export default function CommentsPage() {
                 {email && (
                     <div className="bg-white dark:bg-surface-800 shadow-lg rounded-lg p-6 mb-8">
                         <h3 className="text-xl font-semibold text-primary-700 dark:text-primary-300 mb-4">Add a Comment</h3>
-                        <form className="space-y-4" action={commentAction}>
+                        <form ref={formRef} className="space-y-4" action={commentAction}>
                             <textarea
                                 className="w-full border border-gray-300 dark:border-surface-600 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100"
                                 name="comment"
                                 placeholder="Write your comment..."
                                 rows={4}
+                                disabled={isSubmitting}
                             />
-                            <button type="submit"
-                                className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 active:scale-95 transition-colors">
-                                Add Comment
+                            <button type="submit" disabled={isSubmitting}
+                                className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 active:scale-95 transition-colors disabled:opacity-50">
+                                {isSubmitting ? 'Adding...' : 'Add Comment'}
                             </button>
                         </form>
                     </div>
                 )}
 
-                {error ? (
+                {isLoading ? (
+                    <Spinner className="my-12" size="lg" />
+                ) : error ? (
                     <div className="flex flex-col items-center gap-3 py-12">
                         <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

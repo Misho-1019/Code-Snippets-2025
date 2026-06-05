@@ -50,7 +50,7 @@ snippetController.get('/', validateQuery(paginationSchema), async (req: Request,
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const { search, language } = req.query as Record<string, string | undefined>
+    const { search, language } = req.query as Record<string, unknown> as { search?: string; language?: string }
 
     const filter: Record<string, unknown> = {};
 
@@ -91,10 +91,13 @@ snippetController.get('/', validateQuery(paginationSchema), async (req: Request,
  *         description: No snippets found
  */
 snippetController.get('/latest', async (req: Request, res: Response) => {
-    const { sortBy = 'createdAt', order = 'desc', pageSize = 3 } = req.query as Record<string, string>;
+    const { sortBy = 'createdAt', order = 'desc', pageSize = 3 } = req.query as Record<string, unknown> as { sortBy?: string; order?: string; pageSize?: string };
+
+    const ALLOWED_SORT_FIELDS = ['createdAt', 'title', 'language']
+    const safeSortBy = ALLOWED_SORT_FIELDS.includes(sortBy) ? sortBy : 'createdAt'
 
     try {
-        const snippets = await snippetService.getLatest({ sortBy, order, pageSize: Number(pageSize) })
+        const snippets = await snippetService.getLatest({ sortBy: safeSortBy, order, pageSize: Number(pageSize) })
 
         if (!snippets || snippets.length === 0) {
             res.status(404).json({ error: 'No snippets found!' })
@@ -171,10 +174,10 @@ snippetController.get('/:snippetId', async (req: Request, res: Response) => {
  */
 snippetController.post('/create', isAuth, validate(createSnippetSchema), async (req: Request, res: Response) => {
     const snippetData = req.body;
-    const creatorId = req.user?.id;
+    const creatorId = req.user!.id;
 
     try {
-        const newSnippet = await snippetService.createSnippet(snippetData, creatorId!)
+        const newSnippet = await snippetService.createSnippet(snippetData, creatorId)
 
         res.status(201).json(newSnippet)
     } catch (err) {
@@ -350,6 +353,12 @@ snippetController.post('/:snippetId/comments', isAuth, validate(createCommentSch
     const { text } = req.body;
 
     try {
+        const snippet = await snippetService.getOne(snippetId)
+        if (!snippet) {
+            res.status(404).json({ error: 'Snippet not found!' })
+            return
+        }
+
         const newComment = await commentService.createComment(snippetId, { text, creator: req.user!.id })
 
         res.status(201).json(newComment)
@@ -383,8 +392,21 @@ snippetController.post('/:snippetId/comments', isAuth, validate(createCommentSch
  */
 snippetController.delete('/:snippetId/comments/:commentId', isAuth, async (req: Request, res: Response) => {
     const commentId = req.params.commentId as string;
+    const userId = req.user!.id;
 
     try {
+        const comment = await commentService.getComment(commentId)
+
+        if (!comment) {
+            res.status(404).json({ message: 'Comment not found!' })
+            return
+        }
+
+        if (comment.creator.toString() !== userId) {
+            res.status(403).json({ error: 'Unauthorized!' })
+            return
+        }
+
         const commentDeleted = await commentService.deleteComment(commentId)
 
         if (!commentDeleted) {

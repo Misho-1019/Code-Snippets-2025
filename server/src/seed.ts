@@ -74,7 +74,9 @@ const seed = async () => {
             creator: alice._id,
         })
 
-        console.log(`Created ${5} snippets`)
+        const snippetCount = 5
+
+        console.log(`Created ${snippetCount} snippets`)
 
         // Create comments
         await Comment.create({

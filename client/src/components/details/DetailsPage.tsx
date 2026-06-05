@@ -15,7 +15,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
-    const { userId } = useAuth()
+    const { userId, isAuthenticated } = useAuth()
     const { isDark } = useContext(ThemeContext)
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
@@ -26,6 +26,8 @@ export default function SnippetDetails() {
     const [likedByUser, setLikedByUser] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [isCopied, setIsCopied] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+    const [isLiking, setIsLiking] = useState(false)
     const deleteBtnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
@@ -42,8 +44,8 @@ export default function SnippetDetails() {
     }, [showDeleteModal])
 
     useEffect(() => {
-        document.title = snippet ? `${snippet.title} — Code Snippet` : 'Code Snippet'
-    }, [snippet])
+        document.title = snippet ? `${snippet.title} — Code Snippet` : error ? 'Snippet not found — Code Snippet' : 'Code Snippet'
+    }, [snippet, error])
 
     if (isLoading) return <SkeletonDetails />
     if (error || !snippet) return (
@@ -64,22 +66,27 @@ export default function SnippetDetails() {
 
     const confirmDelete = async () => {
         try {
+            setIsDeleting(true)
             await deleteSnippet(snippetId!)
             showToast('Successfully deleted!', 'success')
             navigate('/snippets')
         } catch (error) {
             showToast((error as Error).message, 'error')
+        } finally {
+            setIsDeleting(false)
         }
     }
 
     const likeHandler = async () => {
         try {
+            setIsLiking(true)
             const result = await toggleLike(snippetId!)
             setLikesCount(result.likesCount)
             setLikedByUser(result.likedByUser)
-            showToast(result.likedByUser ? 'You liked the snippet!' : 'You unliked the snippet!', 'success')
         } catch (err) {
             showToast((err as Error).message, 'error')
+        } finally {
+            setIsLiking(false)
         }
     }
 
@@ -132,7 +139,7 @@ export default function SnippetDetails() {
                     </button>
                 </div>
                 <SyntaxHighlighter
-                    language={snippet.language.toLowerCase()}
+                    language={snippet.language?.toLowerCase() ?? ''}
                     style={isDark ? oneDark : oneLight}
                     customStyle={{ borderRadius: '0.5rem', fontSize: '0.875rem' }}
                 >
@@ -142,14 +149,22 @@ export default function SnippetDetails() {
 
             <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-2">
-                    <button
-                        onClick={likeHandler}
-                        aria-label={likedByUser ? 'Unlike this snippet' : 'Like this snippet'}
-                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors active:scale-95 ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
-                    >
-                        {likedByUser ? <FaHeart /> : <FaRegHeart />}
-                        {likesCount} {likesCount === 1 ? "Like" : "Likes"}
-                    </button>
+                    {isAuthenticated ? (
+                        <button
+                            onClick={likeHandler}
+                            disabled={isLiking}
+                            aria-label={likedByUser ? 'Unlike this snippet' : 'Like this snippet'}
+                            className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors active:scale-95 ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
+                        >
+                            {likedByUser ? <FaHeart /> : <FaRegHeart />}
+                            {likesCount} {likesCount === 1 ? "Like" : "Likes"}
+                        </button>
+                    ) : (
+                        <span className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg bg-gray-100 dark:bg-surface-700 text-gray-400 dark:text-gray-500">
+                            <FaRegHeart />
+                            {likesCount} {likesCount === 1 ? "Like" : "Likes"}
+                        </span>
+                    )}
                 </div>
 
                 <div className="flex justify-end gap-2">
@@ -173,8 +188,9 @@ export default function SnippetDetails() {
                 isOpen={showDeleteModal}
                 title="Delete snippet"
                 message={`Are you sure you want to delete "${snippet.title}"?`}
-                confirmLabel="Delete"
+                confirmLabel={isDeleting ? 'Deleting...' : 'Delete'}
                 variant="danger"
+                isConfirming={isDeleting}
                 onConfirm={confirmDelete}
                 onCancel={() => setShowDeleteModal(false)}
             />

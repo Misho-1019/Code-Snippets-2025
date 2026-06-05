@@ -31,8 +31,8 @@ export default function EditSnippet() {
     const { edit } = useEditSnippet()
 
     useEffect(() => {
-        document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : 'Code Snippet'
-    }, [snippet])
+        document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : error ? 'Error loading snippet — Code Snippet' : 'Code Snippet'
+    }, [snippet, error])
 
     const {
         register,

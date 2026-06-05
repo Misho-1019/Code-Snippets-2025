@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import request from "../utils/request"
 import { UserContext } from "../context/UserContext";
 import type { AuthData } from "../types";
 
-const baseUrl = '/auth'
+const baseUrl = '/api/auth'
 
 export const useLogin = () => {
     const login = async (email: string, password: string): Promise<AuthData> => {
@@ -24,19 +24,15 @@ export const useRegister = () => {
 export const useLogout = () => {
     const { email, userLogoutHandler } = useContext(UserContext);
 
-    useEffect(() => {
-        if (!email) return;
+    const logout = async (): Promise<void> => {
+        try {
+            await request.get(`${baseUrl}/logout`)
+            userLogoutHandler()
+        } catch {
+            // Logout is best-effort; clear auth state regardless
+            userLogoutHandler()
+        }
+    }
 
-        const abort = new AbortController()
-
-        request.get(`${baseUrl}/logout`, { signal: abort.signal })
-            .then(() => userLogoutHandler())
-            .catch(err => {
-                if (err instanceof DOMException && err.name === 'AbortError') return
-            })
-
-        return () => abort.abort()
-    }, [email])
-
-    return { isLoggedOut: !email }
+    return { isLoggedOut: !email, logout }
 }

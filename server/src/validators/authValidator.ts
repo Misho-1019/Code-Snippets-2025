@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { Request, Response, NextFunction } from 'express'
 
 export const registerSchema = z.object({
-    username: z.string().min(1, 'Username is required').min(2, 'Username must be at least 2 characters'),
+    username: z.string().min(2, 'Username must be at least 2 characters'),
     email: z.string().email('Email must be valid'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
 })

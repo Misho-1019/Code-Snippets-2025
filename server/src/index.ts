@@ -42,11 +42,10 @@ try {
 
     console.log('DB connected successfully!');
 } catch (err) {
-    console.log('Cannot connect!');
+    console.error('Cannot connect to DB!');
     console.error(err instanceof Error ? err.message : err);
+    process.exit(1)
 }
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(express.json())
 app.use(cookieParser())
@@ -55,28 +54,24 @@ app.use(mongoSanitize)
 const authLimiter = rateLimit({
     windowMs: 60 * 1000,
     max: 10,
-    message: 'Too many auth attempts from this IP, please try again!',
-})
-
-const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: 'Too many request from this IP, please try again!',
+    message: { error: 'Too many auth attempts from this IP, please try again!' },
 })
 
 const mutationLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 30,
-    message: 'Too many mutations from this IP, please try again!',
+    message: { error: 'Too many mutations from this IP, please try again!' },
     skip: (req) => req.method === 'GET',
 })
 
-app.use('/auth', authLimiter)
-app.use('/snippets', mutationLimiter)
-app.use(generalLimiter)
+app.use('/api/auth', authLimiter)
+app.use('/api/snippets', mutationLimiter)
 app.use(csrfProtection)
 app.use(authMiddleware)
-app.use(routes)
+app.use('/api', routes)
+if (process.env.NODE_ENV !== 'production') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+}
 app.use(errorHandler)
 
 const port = process.env.PORT || 3030;

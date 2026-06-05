@@ -16,7 +16,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [isAuthLoading, setIsAuthLoading] = useState(true)
 
     useEffect(() => {
-        request.get('/auth/me')
+        request.get('/api/auth/me')
             .then(data => {
                 const user = data as { _id: string; email: string; username: string }
                 setAuthData({ ...user, token: '' })

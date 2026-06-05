@@ -34,12 +34,16 @@ authController.post('/register', isGuest, validate(registerSchema), async (req: 
 
     try {
         const result = await authService.register(authData)
-        res.cookie('auth', result.token, { httpOnly: true })
+        res.cookie('auth', result.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+        })
 
         res.status(201).json(result)
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Registration failed'
-        res.status(400).json({ message }).end()
+        res.status(400).json({ message })
     }
 })
 
@@ -71,12 +75,16 @@ authController.post('/login', isGuest, validate(loginSchema), async (req: Reques
     try {
         const result = await authService.login(email, password)
 
-        res.cookie('auth', result.token, { httpOnly: true })
+        res.cookie('auth', result.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+        })
 
         res.status(200).json(result)
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Login failed'
-        res.status(400).json({ message }).end()
+        res.status(400).json({ message })
     }
 })
 
@@ -138,8 +146,8 @@ authController.get('/logout', isAuth, (req: Request, res: Response) => {
         res.clearCookie('auth')
         res.status(200).json({ message: 'Logout successfully!' })
     } catch (error) {
-        console.log(error instanceof Error ? error.message : error);
-        res.status(403).json({ message: 'Logout failed' })
+        console.error(error instanceof Error ? error.message : error);
+        res.status(500).json({ message: 'Logout failed' })
     }
 })
 

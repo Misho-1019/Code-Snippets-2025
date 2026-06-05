@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import request from "../utils/request"
 import useAuth from "../hooks/useAuth"
 import type { Snippet, PaginatedResponse } from "../types"
 
-const baseUrl = '/snippets'
+const baseUrl = '/api/snippets'
 
 export const useSnippets = (search?: string, language?: string, page?: number) => {
     const [snippets, setSnippets] = useState<Snippet[]>([])
@@ -48,9 +48,12 @@ export const useLatestSnippets = () => {
     const [latestSnippets, setLatestSnippets] = useState<Snippet[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<unknown>(null)
+    const abortRef = useRef<AbortController | null>(null)
 
     const fetchLatest = () => {
+        abortRef.current?.abort()
         const abort = new AbortController()
+        abortRef.current = abort
         setIsLoading(true)
         setError(null)
 
@@ -73,7 +76,7 @@ export const useLatestSnippets = () => {
         return () => abort.abort()
     }, [])
 
-    return { latestSnippets, isLoading, error, refetch: () => { fetchLatest().abort() } }
+    return { latestSnippets, isLoading, error, refetch: () => { fetchLatest() } }
 }
 
 export const useSnippet = (snippetId: string) => {
@@ -116,7 +119,7 @@ export const useEditSnippet = () => {
     const { request: authRequest } = useAuth()
 
     const edit = (snippetId: string, snippetData: Record<string, string>): Promise<unknown> =>
-        authRequest.put(`${baseUrl}/${snippetId}`, { ...snippetData, _id: snippetId })
+        authRequest.put(`${baseUrl}/${snippetId}`, snippetData)
 
     return { edit }
 }

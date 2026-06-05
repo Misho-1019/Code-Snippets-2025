@@ -17,6 +17,9 @@ export default {
 
         return newComment;
     },
+    getComment(commentId: string) {
+        return Comment.findById(commentId)
+    },
     deleteComment(commentId: string) {
         return Comment.findByIdAndDelete(commentId)
     },

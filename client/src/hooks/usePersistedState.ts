@@ -18,8 +18,12 @@ export default function usePersistedState<T>(stateKey: string, initialState: T):
     const setPersistedState = (input: T | ((prev: T) => T)): void => {
         const data = typeof input === 'function' ? (input as (prev: T) => T)(state) : input
 
-        localStorage.setItem(stateKey, JSON.stringify(data))
         setState(data)
+        try {
+            localStorage.setItem(stateKey, JSON.stringify(data))
+        } catch {
+            // localStorage unavailable or full
+        }
     }
 
     return [state, setPersistedState]
