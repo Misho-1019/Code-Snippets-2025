@@ -111,8 +111,10 @@ export default function SnippetList() {
                 {!isLoading && !error && snippets.length > 0 && (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {snippets.map(snippet => (
-                                <ItemCatalog key={snippet._id} {...snippet} />
+                            {snippets.map((snippet, i) => (
+                                <div key={snippet._id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.06}s` }}>
+                                    <ItemCatalog {...snippet} />
+                                </div>
                             ))}
                         </div>
 

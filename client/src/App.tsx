@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router'
+import { Link, Route, Routes, useLocation } from 'react-router'
 import './App.css'
 import Header from './components/header/Header'
 import Home from './components/home/Home'
@@ -20,38 +20,41 @@ import useTheme from './hooks/useTheme'
 
 function App() {
     const { isDark, toggleTheme } = useTheme()
+    const location = useLocation()
 
     return (
         <ErrorBoundary>
             <ThemeContext.Provider value={{ isDark, toggleTheme }}>
             <UserProvider>
                 <Header />
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/snippets' element={<SnippetList />} />
-                    <Route path='/snippets/:snippetId/details' element={<SnippetDetails />} />
+                <div key={location.pathname} className="animate-fade-in">
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/snippets' element={<SnippetList />} />
+                        <Route path='/snippets/:snippetId/details' element={<SnippetDetails />} />
 
-                    <Route element={<AuthGuard />}>
-                        <Route path='/logout' element={<Logout />} />
-                        <Route path='/snippets/create' element={<CreateSnippet />} />
-                        <Route path='/snippets/:snippetId/edit' element={<EditSnippet />} />
-                        <Route path='/snippets/:snippetId/comments' element={<CommentsPage />} />
-                    </Route>
+                        <Route element={<AuthGuard />}>
+                            <Route path='/logout' element={<Logout />} />
+                            <Route path='/snippets/create' element={<CreateSnippet />} />
+                            <Route path='/snippets/:snippetId/edit' element={<EditSnippet />} />
+                            <Route path='/snippets/:snippetId/comments' element={<CommentsPage />} />
+                        </Route>
 
-                    <Route element={<GuestGuard />}>
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/register' element={<Register />} />
-                    </Route>
+                        <Route element={<GuestGuard />}>
+                            <Route path='/login' element={<Login />} />
+                            <Route path='/register' element={<Register />} />
+                        </Route>
 
-                    <Route path='*' element={
-                        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-surface-900">
-                            <h1 className="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</h1>
-                            <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">Page not found</p>
-                            <Link to="/" className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">Go Home</Link>
-                        </div>
-                    } />
-                </Routes>
-                <ToastContainer />
+                        <Route path='*' element={
+                            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-surface-900">
+                                <h1 className="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</h1>
+                                <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">Page not found</p>
+                                <Link to="/" className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">Go Home</Link>
+                            </div>
+                        } />
+                    </Routes>
+                </div>
+                <ToastContainer position="top-right" />
             </UserProvider>
             </ThemeContext.Provider>
         </ErrorBoundary>

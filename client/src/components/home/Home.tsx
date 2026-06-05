@@ -39,10 +39,11 @@ export default function Home() {
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {latestSnippets.map(snippet => (
+                    {latestSnippets.map((snippet, i) => (
                         <div
                             key={snippet._id}
-                            className="bg-indigo-50 dark:bg-surface-800 border border-indigo-200 dark:border-surface-600 rounded-xl shadow-md p-6 hover:shadow-lg transition"
+                            className="bg-indigo-50 dark:bg-surface-800 border border-indigo-200 dark:border-surface-600 rounded-xl shadow-md p-6 hover:shadow-lg transition animate-fade-in-up"
+                            style={{ animationDelay: `${i * 0.08}s` }}
                         >
                             <h4 className="text-lg font-semibold text-indigo-800 dark:text-primary-300 mb-2">{snippet.title}</h4>
                             <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">

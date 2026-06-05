@@ -41,9 +41,9 @@ export default function ConfirmModal({
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onCancel}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-fade-in" onClick={onCancel}>
             <div
-                className="bg-white dark:bg-surface-800 rounded-xl shadow-xl p-6 max-w-sm w-full mx-4"
+                className="bg-white dark:bg-surface-800 rounded-xl shadow-xl p-6 max-w-sm w-full mx-4 animate-scale-in"
                 onClick={e => e.stopPropagation()}
                 role="dialog"
                 aria-modal="true"
