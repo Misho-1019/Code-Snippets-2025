@@ -14,10 +14,11 @@ import SnippetList from './components/catalog/CatalogPage'
 import SnippetDetails from './components/details/DetailsPage'
 import EditSnippet from './components/edit/EditPage'
 import CommentsPage from './components/comments/CommentPage'
+import ErrorBoundary from './components/ErrorBoundary'
 
 function App() {
     return (
-        <>
+        <ErrorBoundary>
             <UserProvider>
                 <Header />
                 <Routes>
@@ -47,7 +48,7 @@ function App() {
                 </Routes>
                 <ToastContainer />
             </UserProvider>
-        </>
+        </ErrorBoundary>
     )
 }
 

@@ -13,6 +13,7 @@ const initialAuthState: AuthData = {
 
 export function UserProvider({ children }: { children: ReactNode }) {
     const [authData, setAuthData] = useState<AuthData>(initialAuthState)
+    const [isAuthLoading, setIsAuthLoading] = useState(true)
 
     useEffect(() => {
         request.get('/auth/me')
@@ -22,6 +23,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
             })
             .catch(() => {
                 setAuthData(initialAuthState)
+            })
+            .finally(() => {
+                setIsAuthLoading(false)
             })
     }, [])
 
@@ -34,7 +38,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <UserContext.Provider value={{ ...authData, userLoginHandler, userLogoutHandler }}>
+        <UserContext.Provider value={{ ...authData, isAuthLoading, userLoginHandler, userLogoutHandler }}>
             {children}
         </UserContext.Provider>
     )

@@ -6,6 +6,7 @@ export const UserContext = createContext<UserContextType>({
     email: '',
     username: '',
     token: '',
+    isAuthLoading: true,
     userLoginHandler: () => null,
     userLogoutHandler: () => null,
 })

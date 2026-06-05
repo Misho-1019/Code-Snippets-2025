@@ -25,6 +25,7 @@ export interface AuthData {
 }
 
 export interface UserContextType extends AuthData {
+    isAuthLoading: boolean
     userLoginHandler: (data: AuthData) => void
     userLogoutHandler: () => void
 }

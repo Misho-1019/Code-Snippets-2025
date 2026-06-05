@@ -13,6 +13,7 @@ interface AuthRequest {
 interface UseAuthReturn extends AuthData {
     userId: string
     isAuthenticated: boolean
+    isAuthLoading: boolean
     request: AuthRequest
 }
 
@@ -26,7 +27,8 @@ export default function useAuth(): UseAuthReturn {
     return {
         ...authData,
         userId: authData._id,
-        isAuthenticated: !!authData.token,
+        isAuthenticated: !!authData.email,
+        isAuthLoading: authData.isAuthLoading,
         request: {
             get: requestWrapper.bind(null, 'GET'),
             post: requestWrapper.bind(null, 'POST'),
