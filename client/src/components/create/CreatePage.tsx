@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
+import Breadcrumbs from "../Breadcrumbs";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
@@ -45,6 +46,10 @@ export default function CreateSnippet() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto bg-white dark:bg-surface-800 rounded-2xl shadow-lg p-8">
+                <Breadcrumbs items={[
+                    { label: 'Snippets', href: '/snippets' },
+                    { label: 'Create' },
+                ]} />
                 <h2 className="text-3xl font-extrabold text-primary-700 dark:text-primary-300 mb-8 border-b dark:border-surface-600 pb-4">
                     Create New Snippet
                 </h2>
@@ -85,7 +90,7 @@ export default function CreateSnippet() {
                     <div className="pt-4">
                         <button type="submit" disabled={isSubmitting}
                             className="w-full md:w-auto px-6 py-2 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 transition disabled:opacity-50">
-                            Create Snippet
+                            {isSubmitting ? 'Creating...' : 'Create Snippet'}
                         </button>
                     </div>
                 </form>

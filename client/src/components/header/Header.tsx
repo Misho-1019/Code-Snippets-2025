@@ -4,15 +4,30 @@ import { UserContext } from "../../context/UserContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { FiSun, FiMoon } from "react-icons/fi";
 
+function UserAvatar({ email, username }: { email: string; username: string }) {
+    const initials = (username || email).slice(0, 2).toUpperCase()
+    return (
+        <span
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white text-sm font-semibold"
+            title={email}
+        >
+            {initials}
+        </span>
+    )
+}
+
 export default function Header() {
-    const { email, isAuthLoading } = useContext(UserContext);
+    const { email, username, isAuthLoading } = useContext(UserContext);
     const { isDark, toggleTheme } = useContext(ThemeContext);
     const [menuOpen, setMenuOpen] = useState(false)
 
     const navLinks = email ? (
         <>
             <Link to="/snippets/create" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Create Snippet</Link>
-            <Link to="/logout" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Logout</Link>
+            <div className="flex items-center gap-2">
+                <UserAvatar email={email} username={username} />
+                <Link to="/logout" className="hover:text-gray-200" onClick={() => setMenuOpen(false)}>Logout</Link>
+            </div>
         </>
     ) : (
         <>

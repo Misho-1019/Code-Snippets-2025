@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
+import Spinner from "../Spinner";
+import Breadcrumbs from "../Breadcrumbs";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
@@ -52,8 +54,8 @@ export default function EditSnippet() {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
-    if (error || !snippet) return <div>Error loading snippet.</div>
+    if (isLoading) return <Spinner className="mt-20" size="lg" />
+    if (error || !snippet) return <div className="text-center mt-10 text-gray-500">Error loading snippet.</div>
 
     const isOwner = userId === snippet.creator
 
@@ -63,6 +65,11 @@ export default function EditSnippet() {
 
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
+            <Breadcrumbs items={[
+                { label: 'Snippets', href: '/snippets' },
+                { label: snippet.title, href: `/snippets/${snippetId}/details` },
+                { label: 'Edit' },
+            ]} />
             <h2 className="text-2xl font-bold text-primary-700 dark:text-primary-300 mb-6">Edit Snippet</h2>
 
             <form className="space-y-5" onSubmit={handleSubmit(submitHandler)} noValidate>
@@ -97,7 +104,7 @@ export default function EditSnippet() {
                 <div className="text-right">
                     <button type="submit" disabled={isSubmitting}
                         className="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition disabled:opacity-50">
-                        Save Changes
+                        {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </form>

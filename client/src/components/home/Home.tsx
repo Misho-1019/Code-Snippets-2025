@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import { useLatestSnippets } from "../../api/snippetApi";
+import Spinner from "../Spinner";
 
 export default function Home() {
     const navigate = useNavigate()
@@ -27,9 +28,7 @@ export default function Home() {
 
                 <h3 id="latest-snippets" className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-6">Latest Snippets</h3>
 
-                {isLoading && (
-                    <div className="text-gray-500 dark:text-gray-400">Loading snippets...</div>
-                )}
+                {isLoading && <Spinner className="my-8" />}
 
                 {error ? (
                     <div className="text-red-500">Failed to load snippets.</div>

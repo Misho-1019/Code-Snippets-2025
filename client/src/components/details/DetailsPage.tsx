@@ -7,6 +7,9 @@ import { showToast } from "../../utils/toastUtils";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Spinner from "../Spinner";
+import Breadcrumbs from "../Breadcrumbs";
+import ConfirmModal from "../ConfirmModal";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
@@ -18,6 +21,7 @@ export default function SnippetDetails() {
 
     const [likesCount, setLikesCount] = useState(0)
     const [likedByUser, setLikedByUser] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
         if (snippet && snippet.likes) {
@@ -26,14 +30,14 @@ export default function SnippetDetails() {
         }
     }, [snippet, userId])
 
-    if (isLoading) return <div>Loading...</div>
-    if (!snippet) return <div className="text-center mt-10 text-gray-500">Snippet not found.</div>
+    if (isLoading) return <Spinner className="mt-20" size="lg" />
+    if (!snippet) return <div className="text-center mt-10 text-gray-500 dark:text-gray-400">Snippet not found.</div>
 
     const snippetDeleteClickHandler = async () => {
-        const hasConfirm = window.confirm(`Are you sure you want to delete ${snippet.title} snippet?`)
+        setShowDeleteModal(true)
+    }
 
-        if (!hasConfirm) return
-
+    const confirmDelete = async () => {
         try {
             await deleteSnippet(snippetId!)
             showToast('Successfully deleted!', 'success')
@@ -58,6 +62,10 @@ export default function SnippetDetails() {
 
     return (
         <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
+            <Breadcrumbs items={[
+                { label: 'Snippets', href: '/snippets' },
+                { label: snippet.title },
+            ]} />
             <div className="border-b dark:border-surface-600 pb-4 mb-4">
                 <h2 className="text-3xl font-bold text-primary-700 dark:text-primary-300">{snippet.title}</h2>
             </div>
@@ -112,6 +120,16 @@ export default function SnippetDetails() {
                     )}
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={showDeleteModal}
+                title="Delete snippet"
+                message={`Are you sure you want to delete "${snippet.title}"?`}
+                confirmLabel="Delete"
+                variant="danger"
+                onConfirm={confirmDelete}
+                onCancel={() => setShowDeleteModal(false)}
+            />
         </div>
     );
 }

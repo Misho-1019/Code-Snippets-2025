@@ -56,7 +56,7 @@ export default function Login() {
                         {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password.message}</p>)}
                     </div>
                     <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 transition" disabled={isSubmitting}>
-                        Login
+                        {isSubmitting ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
                 <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-6">

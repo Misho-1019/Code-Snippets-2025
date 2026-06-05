@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import ItemCatalog from "./item/ItemCatalog";
 import { useSnippets } from "../../api/snippetApi";
+import Spinner from "../Spinner";
+import SkeletonCard from "../SkeletonCard";
 
 export default function SnippetList() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -85,8 +87,10 @@ export default function SnippetList() {
                 </div>
 
                 {isLoading && (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <SkeletonCard key={i} />
+                        ))}
                     </div>
                 )}
 
