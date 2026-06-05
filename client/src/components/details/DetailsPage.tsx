@@ -18,7 +18,7 @@ export default function SnippetDetails() {
     const { userId } = useAuth()
     const { isDark } = useContext(ThemeContext)
     const { snippetId } = useParams<{ snippetId: string }>()
-    const { snippet, isLoading } = useSnippet(snippetId || '')
+    const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { deleteSnippet } = useDeleteSnippet()
     const { toggleLike } = useToggleLike()
 
@@ -41,8 +41,22 @@ export default function SnippetDetails() {
         }
     }, [showDeleteModal])
 
+    useEffect(() => {
+        document.title = snippet ? `${snippet.title} — Code Snippet` : 'Code Snippet'
+    }, [snippet])
+
     if (isLoading) return <SkeletonDetails />
-    if (!snippet) return <div className="text-center mt-10 text-gray-500 dark:text-gray-400">Snippet not found.</div>
+    if (error || !snippet) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 gap-3">
+            <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-red-500 text-lg">Failed to load snippet.</p>
+            <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
+                Try Again
+            </button>
+        </div>
+    )
 
     const snippetDeleteClickHandler = async () => {
         setShowDeleteModal(true)
@@ -81,10 +95,6 @@ export default function SnippetDetails() {
             showToast('Failed to copy code', 'error')
         }
     }
-
-    useEffect(() => {
-        document.title = snippet ? `${snippet.title} — Code Snippet` : 'Code Snippet'
-    }, [snippet])
 
     return (
         <div className="min-h-screen py-12 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">

@@ -8,7 +8,7 @@ import type { Comment } from "../../types";
 export default function CommentsPage() {
     const { email, userId } = useAuth()
     const { snippetId } = useParams<{ snippetId: string }>()
-    const { comments } = useComments(snippetId || '')
+    const { comments, isLoading, error } = useComments(snippetId || '')
     const { create } = useCreateComments()
     const { deleteComment } = useDeleteComment()
     const [commentList, setCommentList] = useState<Comment[]>([])
@@ -73,6 +73,17 @@ export default function CommentsPage() {
                     </div>
                 )}
 
+                {error ? (
+                    <div className="flex flex-col items-center gap-3 py-12">
+                        <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-red-500">Failed to load comments.</p>
+                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
+                            Try Again
+                        </button>
+                    </div>
+                ) : (
                 <div className="bg-white dark:bg-surface-800 shadow-lg rounded-lg p-6">
                     <h3 className="text-xl font-semibold text-primary-700 dark:text-primary-300 mb-4">All Comments</h3>
 
@@ -112,6 +123,7 @@ export default function CommentsPage() {
                         }
                     </div>
                 </div>
+                )}
             </div>
         </main>
     );

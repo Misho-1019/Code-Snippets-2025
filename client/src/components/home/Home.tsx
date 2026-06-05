@@ -5,7 +5,7 @@ import Spinner from "../Spinner";
 
 export default function Home() {
     const navigate = useNavigate()
-    const { latestSnippets, isLoading, error } = useLatestSnippets()
+    const { latestSnippets, isLoading, error, refetch } = useLatestSnippets()
 
     useEffect(() => {
         document.title = 'Home — Code Snippet'
@@ -41,7 +41,7 @@ export default function Home() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <p>Failed to load snippets.</p>
-                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
+                        <button onClick={() => refetch()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
                             Try Again
                         </button>
                     </div>

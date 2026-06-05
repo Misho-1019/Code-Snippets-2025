@@ -13,6 +13,7 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
     const [error, setError] = useState<unknown>(null)
 
     useEffect(() => {
+        const abort = new AbortController()
         setIsLoading(true)
         setError(null)
 
@@ -23,7 +24,7 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
 
         const qs = Object.keys(params).length ? '?' + new URLSearchParams(params).toString() : ''
 
-        request.get(baseUrl + qs)
+        request.get(baseUrl + qs, { signal: abort.signal })
             .then(res => {
                 const data = res as PaginatedResponse
                 setSnippets(data.snippets)
@@ -32,9 +33,12 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
                 setIsLoading(false)
             })
             .catch(err => {
+                if (err instanceof DOMException && err.name === 'AbortError') return
                 setError(err)
                 setIsLoading(false)
             })
+
+        return () => abort.abort()
     }, [search, language, page])
 
     return { snippets, totalPages, currentPage, isLoading, error }
@@ -45,22 +49,31 @@ export const useLatestSnippets = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<unknown>(null)
 
-    useEffect(() => {
+    const fetchLatest = () => {
+        const abort = new AbortController()
         setIsLoading(true)
         setError(null)
 
-        request.get(`${baseUrl}/latest`)
+        request.get(`${baseUrl}/latest`, { signal: abort.signal })
             .then(data => {
                 setLatestSnippets(data as Snippet[])
                 setIsLoading(false)
             })
             .catch(err => {
+                if (err instanceof DOMException && err.name === 'AbortError') return
                 setError(err)
                 setIsLoading(false)
             })
+
+        return abort
+    }
+
+    useEffect(() => {
+        const abort = fetchLatest()
+        return () => abort.abort()
     }, [])
 
-    return { latestSnippets, isLoading, error }
+    return { latestSnippets, isLoading, error, refetch: () => { fetchLatest().abort() } }
 }
 
 export const useSnippet = (snippetId: string) => {
@@ -69,18 +82,22 @@ export const useSnippet = (snippetId: string) => {
     const [error, setError] = useState<unknown>(null)
 
     useEffect(() => {
+        const abort = new AbortController()
         setIsLoading(true)
         setError(null)
 
-        request.get(`${baseUrl}/${snippetId}`)
+        request.get(`${baseUrl}/${snippetId}`, { signal: abort.signal })
             .then(data => {
                 setSnippet(data as Snippet)
                 setIsLoading(false)
             })
             .catch(err => {
+                if (err instanceof DOMException && err.name === 'AbortError') return
                 setError(err)
                 setIsLoading(false)
             })
+
+        return () => abort.abort()
     }, [snippetId])
 
     return { snippet, isLoading, error }

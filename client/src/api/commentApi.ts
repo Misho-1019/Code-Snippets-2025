@@ -11,19 +11,22 @@ export const useComments = (snippetId: string) => {
     const [error, setError] = useState<unknown>(null)
 
     useEffect(() => {
+        const abort = new AbortController()
         setIsLoading(true)
         setError(null)
 
-        request.get(`${baseUrl}/${snippetId}/comments`)
+        request.get(`${baseUrl}/${snippetId}/comments`, { signal: abort.signal })
             .then(data => {
                 setComments(data as Comment[])
                 setIsLoading(false)
             })
             .catch(err => {
+                if (err instanceof DOMException && err.name === 'AbortError') return
                 setError(err)
                 setIsLoading(false)
             })
 
+        return () => abort.abort()
     }, [snippetId])
 
     return { comments, isLoading, error }

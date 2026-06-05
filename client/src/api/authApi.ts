@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect } from "react"
 import request from "../utils/request"
 import { UserContext } from "../context/UserContext";
 import type { AuthData } from "../types";
@@ -6,17 +6,10 @@ import type { AuthData } from "../types";
 const baseUrl = '/auth'
 
 export const useLogin = () => {
-    const abortRef = useRef(new AbortController());
-
     const login = async (email: string, password: string): Promise<AuthData> => {
-        const result = await request.post(`${baseUrl}/login`, { email, password }, { signal: abortRef.current.signal })
+        const result = await request.post(`${baseUrl}/login`, { email, password })
         return result as AuthData
     }
-
-    useEffect(() => {
-        const abortController = abortRef.current;
-        return () => abortController.abort();
-    }, [])
 
     return { login }
 }
@@ -34,9 +27,16 @@ export const useLogout = () => {
     useEffect(() => {
         if (!email) return;
 
-        request.get(`${baseUrl}/logout`)
-            .finally(userLogoutHandler)
-    }, [email, userLogoutHandler])
+        const abort = new AbortController()
+
+        request.get(`${baseUrl}/logout`, { signal: abort.signal })
+            .then(() => userLogoutHandler())
+            .catch(err => {
+                if (err instanceof DOMException && err.name === 'AbortError') return
+            })
+
+        return () => abort.abort()
+    }, [email])
 
     return { isLoggedOut: !email }
 }

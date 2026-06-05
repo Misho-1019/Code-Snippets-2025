@@ -26,7 +26,8 @@ export default function ConfirmModal({
 
     useEffect(() => {
         if (isOpen) {
-            cancelRef.current?.focus()
+            const timer = setTimeout(() => cancelRef.current?.focus(), 0)
+            return () => clearTimeout(timer)
         }
     }, [isOpen])
 
