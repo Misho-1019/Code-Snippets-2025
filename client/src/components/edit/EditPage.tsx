@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { useEditSnippet, useSnippet } from "../../api/snippetApi";
 import useAuth from "../../hooks/useAuth";
@@ -28,6 +29,10 @@ export default function EditSnippet() {
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { edit } = useEditSnippet()
+
+    useEffect(() => {
+        document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : 'Code Snippet'
+    }, [snippet])
 
     const {
         register,

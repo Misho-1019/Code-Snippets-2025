@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useRegister } from "../../api/authApi";
 import { useUserContext } from "../../context/UserContext";
@@ -24,6 +25,10 @@ export default function Register() {
     const navigate = useNavigate();
     const { register: registerUser } = useRegister()
     const { userLoginHandler } = useUserContext()
+
+    useEffect(() => {
+        document.title = 'Register — Code Snippet'
+    }, [])
 
     const {
         register,

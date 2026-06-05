@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useLatestSnippets } from "../../api/snippetApi";
 import Spinner from "../Spinner";
@@ -5,6 +6,10 @@ import Spinner from "../Spinner";
 export default function Home() {
     const navigate = useNavigate()
     const { latestSnippets, isLoading, error } = useLatestSnippets()
+
+    useEffect(() => {
+        document.title = 'Home — Code Snippet'
+    }, [])
 
     const scrollToLatest = () => {
         document.getElementById('latest-snippets')?.scrollIntoView({ behavior: 'smooth' })
@@ -31,11 +36,24 @@ export default function Home() {
                 {isLoading && <Spinner className="my-8" />}
 
                 {error ? (
-                    <div className="text-red-500">Failed to load snippets.</div>
+                    <div className="flex flex-col items-center gap-3 text-red-500 my-8">
+                        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p>Failed to load snippets.</p>
+                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">
+                            Try Again
+                        </button>
+                    </div>
                 ) : null}
 
                 {!isLoading && !error && latestSnippets.length === 0 && (
-                    <div className="text-gray-500 dark:text-gray-400">No snippets yet.</div>
+                    <div className="flex flex-col items-center gap-3 text-gray-400 dark:text-gray-500 my-12">
+                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p className="text-lg">No snippets yet.</p>
+                    </div>
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useCreateSnippet } from "../../api/snippetApi";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,10 @@ interface CreateForm {
 export default function CreateSnippet() {
     const navigate = useNavigate();
     const { create } = useCreateSnippet()
+
+    useEffect(() => {
+        document.title = 'Create Snippet — Code Snippet'
+    }, [])
 
     const {
         register,

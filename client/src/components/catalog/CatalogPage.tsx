@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import ItemCatalog from "./item/ItemCatalog";
 import { useSnippets } from "../../api/snippetApi";
@@ -14,6 +14,10 @@ export default function SnippetList() {
     const [searchInput, setSearchInput] = useState(search)
 
     const { snippets, totalPages, currentPage, isLoading, error } = useSnippets(search || undefined, language || undefined, page)
+
+    useEffect(() => {
+        document.title = 'Snippets — Code Snippet'
+    }, [])
 
     const updateParams = (updates: Record<string, string>) => {
         const next = new URLSearchParams(searchParams)
@@ -95,13 +99,22 @@ export default function SnippetList() {
                 )}
 
                 {!!error && (
-                    <div className="flex justify-center items-center h-64">
+                    <div className="flex flex-col items-center justify-center h-64 gap-3">
+                        <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         <p className="text-red-500 text-lg">Failed to load snippets.</p>
+                        <button onClick={() => window.location.reload()} className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">
+                            Try Again
+                        </button>
                     </div>
                 )}
 
                 {!isLoading && !error && snippets.length === 0 && (
-                    <div className="flex justify-center items-center h-64 bg-white dark:bg-surface-800 rounded-xl shadow-inner">
+                    <div className="flex flex-col items-center justify-center h-64 bg-white dark:bg-surface-800 rounded-xl shadow-inner gap-3">
+                        <svg className="w-16 h-16 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         <h3 className="text-xl text-gray-500 dark:text-gray-400 font-semibold">
                             {search || language ? 'No snippets match your filters.' : 'No snippets yet'}
                         </h3>

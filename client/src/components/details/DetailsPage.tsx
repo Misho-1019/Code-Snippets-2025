@@ -1,19 +1,21 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 import { useToggleLike } from "../../api/likesApi";
 import { showToast } from "../../utils/toastUtils";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaCopy } from "react-icons/fa";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneLight, oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Spinner from "../Spinner";
 import Breadcrumbs from "../Breadcrumbs";
 import ConfirmModal from "../ConfirmModal";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
     const { userId } = useAuth()
+    const { isDark } = useContext(ThemeContext)
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading } = useSnippet(snippetId || '')
     const { deleteSnippet } = useDeleteSnippet()
@@ -22,6 +24,7 @@ export default function SnippetDetails() {
     const [likesCount, setLikesCount] = useState(0)
     const [likedByUser, setLikedByUser] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [isCopied, setIsCopied] = useState(false)
     const deleteBtnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
@@ -67,6 +70,21 @@ export default function SnippetDetails() {
 
     const isOwner = userId === snippet.creator
 
+    const copyCode = async () => {
+        try {
+            await navigator.clipboard.writeText(snippet.code)
+            setIsCopied(true)
+            setTimeout(() => setIsCopied(false), 2000)
+            showToast('Code copied!', 'success')
+        } catch {
+            showToast('Failed to copy code', 'error')
+        }
+    }
+
+    useEffect(() => {
+        document.title = snippet ? `${snippet.title} — Code Snippet` : 'Code Snippet'
+    }, [snippet])
+
     return (
         <div className="min-h-screen py-12 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
             <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
@@ -91,10 +109,20 @@ export default function SnippetDetails() {
             </div>
 
             <div className="mb-6" role="code" aria-label={`${snippet.language} code snippet`}>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Code</h3>
+                <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Code</h3>
+                    <button
+                        onClick={copyCode}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-surface-600 transition"
+                        aria-label={isCopied ? 'Code copied' : 'Copy code to clipboard'}
+                    >
+                        <FaCopy className="w-3.5 h-3.5" />
+                        {isCopied ? 'Copied!' : 'Copy'}
+                    </button>
+                </div>
                 <SyntaxHighlighter
                     language={snippet.language.toLowerCase()}
-                    style={oneLight}
+                    style={isDark ? oneDark : oneLight}
                     customStyle={{ borderRadius: '0.5rem', fontSize: '0.875rem' }}
                 >
                     {snippet.code}

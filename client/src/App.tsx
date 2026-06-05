@@ -15,6 +15,7 @@ import SnippetDetails from './components/details/DetailsPage'
 import EditSnippet from './components/edit/EditPage'
 import CommentsPage from './components/comments/CommentPage'
 import ErrorBoundary from './components/ErrorBoundary'
+import Footer from './components/Footer'
 import { ThemeContext } from './context/ThemeContext'
 import useTheme from './hooks/useTheme'
 
@@ -26,11 +27,12 @@ function App() {
         <ErrorBoundary>
             <ThemeContext.Provider value={{ isDark, toggleTheme }}>
             <UserProvider>
+                <div className="min-h-screen flex flex-col">
                 <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-primary-600 focus:rounded-md focus:shadow-md">
                     Skip to content
                 </a>
                 <Header />
-                <main id="main-content" key={location.pathname} className="animate-fade-in" role="status">
+                <main id="main-content" key={location.pathname} className="animate-fade-in flex-1" role="status">
                     <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/snippets' element={<SnippetList />} />
@@ -57,7 +59,9 @@ function App() {
                         } />
                     </Routes>
                 </main>
-                <ToastContainer position="top-right" />
+                <Footer />
+                <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+                </div>
             </UserProvider>
             </ThemeContext.Provider>
         </ErrorBoundary>
