@@ -15,10 +15,15 @@ import SnippetDetails from './components/details/DetailsPage'
 import EditSnippet from './components/edit/EditPage'
 import CommentsPage from './components/comments/CommentPage'
 import ErrorBoundary from './components/ErrorBoundary'
+import { ThemeContext } from './context/ThemeContext'
+import useTheme from './hooks/useTheme'
 
 function App() {
+    const { isDark, toggleTheme } = useTheme()
+
     return (
         <ErrorBoundary>
+            <ThemeContext.Provider value={{ isDark, toggleTheme }}>
             <UserProvider>
                 <Header />
                 <Routes>
@@ -39,15 +44,16 @@ function App() {
                     </Route>
 
                     <Route path='*' element={
-                        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-                            <h1 className="text-6xl font-bold text-indigo-600 mb-4">404</h1>
-                            <p className="text-xl text-gray-600 mb-6">Page not found</p>
-                            <Link to="/" className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">Go Home</Link>
+                        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-surface-900">
+                            <h1 className="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</h1>
+                            <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">Page not found</p>
+                            <Link to="/" className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition">Go Home</Link>
                         </div>
                     } />
                 </Routes>
                 <ToastContainer />
             </UserProvider>
+            </ThemeContext.Provider>
         </ErrorBoundary>
     )
 }

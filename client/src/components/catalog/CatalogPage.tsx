@@ -35,10 +35,10 @@ export default function SnippetList() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b pb-4 gap-4">
-                    <h2 className="text-3xl font-extrabold text-indigo-700">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b dark:border-surface-600 pb-4 gap-4">
+                    <h2 className="text-3xl font-extrabold text-primary-700 dark:text-primary-300">
                         Snippets
                     </h2>
 
@@ -49,11 +49,11 @@ export default function SnippetList() {
                                 value={searchInput}
                                 onChange={e => setSearchInput(e.target.value)}
                                 placeholder="Search snippets..."
-                                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-48"
+                                className="px-3 py-2 border border-gray-300 dark:border-surface-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 w-full sm:w-48"
                             />
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition"
+                                className="px-4 py-2 bg-primary-600 text-white text-sm rounded-md hover:bg-primary-700 transition"
                             >
                                 Search
                             </button>
@@ -62,7 +62,7 @@ export default function SnippetList() {
                         <select
                             value={language}
                             onChange={e => updateParams({ language: e.target.value })}
-                            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="px-3 py-2 border border-gray-300 dark:border-surface-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100"
                         >
                             <option value="">All Languages</option>
                             <option value="javascript">JavaScript</option>
@@ -86,7 +86,7 @@ export default function SnippetList() {
 
                 {isLoading && (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600" />
+                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600" />
                     </div>
                 )}
 
@@ -97,8 +97,8 @@ export default function SnippetList() {
                 )}
 
                 {!isLoading && !error && snippets.length === 0 && (
-                    <div className="flex justify-center items-center h-64 bg-white rounded-xl shadow-inner">
-                        <h3 className="text-xl text-gray-500 font-semibold">
+                    <div className="flex justify-center items-center h-64 bg-white dark:bg-surface-800 rounded-xl shadow-inner">
+                        <h3 className="text-xl text-gray-500 dark:text-gray-400 font-semibold">
                             {search || language ? 'No snippets match your filters.' : 'No snippets yet'}
                         </h3>
                     </div>
@@ -117,7 +117,7 @@ export default function SnippetList() {
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage <= 1}
-                                    className="px-4 py-2 text-sm rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition"
+                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 transition"
                                 >
                                     Prev
                                 </button>
@@ -127,8 +127,8 @@ export default function SnippetList() {
                                         onClick={() => handlePageChange(p)}
                                         className={`px-3 py-2 text-sm rounded-md transition ${
                                             p === currentPage
-                                                ? 'bg-indigo-600 text-white'
-                                                : 'bg-white border border-gray-300 hover:bg-gray-50'
+                                                ? 'bg-primary-600 text-white'
+                                                : 'bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-surface-600'
                                         }`}
                                     >
                                         {p}
@@ -137,7 +137,7 @@ export default function SnippetList() {
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage >= totalPages}
-                                    className="px-4 py-2 text-sm rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50 transition"
+                                    className="px-4 py-2 text-sm rounded-md bg-white dark:bg-surface-700 border border-gray-300 dark:border-surface-600 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-surface-600 transition"
                                 >
                                     Next
                                 </button>

@@ -1,9 +1,12 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router";
 import { UserContext } from "../../context/UserContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { FiSun, FiMoon } from "react-icons/fi";
 
 export default function Header() {
     const { email, isAuthLoading } = useContext(UserContext);
+    const { isDark, toggleTheme } = useContext(ThemeContext);
     const [menuOpen, setMenuOpen] = useState(false)
 
     const navLinks = email ? (
@@ -19,25 +22,35 @@ export default function Header() {
     )
 
     return (
-        <header className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
+        <header className="bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-md">
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <Link to="/" className="text-2xl font-bold tracking-wide">Code Snippet</Link>
 
-                <button
-                    className="md:hidden p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                >
-                    {menuOpen ? (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    ) : (
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    )}
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white"
+                        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                        {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+                    </button>
+
+                    <button
+                        className="md:hidden p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                    >
+                        {menuOpen ? (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        ) : (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        )}
+                    </button>
+                </div>
 
                 <nav className="hidden md:flex items-center space-x-6">
                     <Link to='/' className="hover:text-gray-200">Home</Link>

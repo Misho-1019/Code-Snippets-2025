@@ -43,48 +43,48 @@ export default function CreateSnippet() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-3xl font-extrabold text-indigo-700 mb-8 border-b pb-4">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto bg-white dark:bg-surface-800 rounded-2xl shadow-lg p-8">
+                <h2 className="text-3xl font-extrabold text-primary-700 dark:text-primary-300 mb-8 border-b dark:border-surface-600 pb-4">
                     Create New Snippet
                 </h2>
 
                 <form className="space-y-6" onSubmit={handleSubmit(submitHandler)} noValidate>
                     <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
                         <input type="text" id="title" {...register('title')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
                             placeholder="Snippet title" />
                         {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                     </div>
 
                     <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                        <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                         <textarea id="description" rows={3} {...register('description')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
                             placeholder="Brief description of your snippet" />
                         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                     </div>
 
                     <div>
-                        <label htmlFor="code" className="block text-sm font-medium text-gray-700">Code</label>
+                        <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Code</label>
                         <textarea id="code" rows={6} {...register('code')}
-                            className="mt-1 block w-full font-mono px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            className="mt-1 block w-full font-mono px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
                             placeholder="Paste your code here" />
                         {errors.code && <p className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
                     </div>
 
                     <div>
-                        <label htmlFor="language" className="block text-sm font-medium text-gray-700">Language</label>
+                        <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Language</label>
                         <input type="text" id="language" {...register('language')}
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100"
                             placeholder="e.g., JavaScript, Python" />
                         {errors.language && <p className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
                     </div>
 
                     <div className="pt-4">
                         <button type="submit" disabled={isSubmitting}
-                            className="w-full md:w-auto px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 transition disabled:opacity-50">
+                            className="w-full md:w-auto px-6 py-2 bg-primary-600 text-white font-semibold rounded-md hover:bg-primary-700 transition disabled:opacity-50">
                             Create Snippet
                         </button>
                     </div>

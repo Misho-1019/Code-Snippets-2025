@@ -57,21 +57,21 @@ export default function SnippetDetails() {
     const isOwner = userId === snippet.creator
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-            <div className="border-b pb-4 mb-4">
-                <h2 className="text-3xl font-bold text-indigo-700">{snippet.title}</h2>
+        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
+            <div className="border-b dark:border-surface-600 pb-4 mb-4">
+                <h2 className="text-3xl font-bold text-primary-700 dark:text-primary-300">{snippet.title}</h2>
             </div>
 
             <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-700 mb-1">Language</h3>
-                <span className="inline-block bg-indigo-100 text-indigo-700 text-sm font-medium px-3 py-1 rounded-full">
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">Language</h3>
+                <span className="inline-block bg-indigo-100 dark:bg-surface-700 text-primary-700 dark:text-primary-300 text-sm font-medium px-3 py-1 rounded-full">
                     {snippet.language}
                 </span>
             </div>
 
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-600 leading-relaxed">{snippet.description}</p>
+                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Description</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{snippet.description}</p>
             </div>
 
             <div className="mb-6">
@@ -89,7 +89,7 @@ export default function SnippetDetails() {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={likeHandler}
-                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-600"}`}
+                        className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
                     >
                         {likedByUser ? <FaHeart /> : <FaRegHeart />}
                         {likesCount} {likesCount === 1 ? "Like" : "Likes"}
@@ -97,12 +97,12 @@ export default function SnippetDetails() {
                 </div>
 
                 <div className="flex justify-end gap-2">
-                    <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                    <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
                         Comments
                     </Link>
                     {isOwner && (
                         <div className="flex justify-end gap-2">
-                            <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors">
+                            <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
                                 Edit
                             </Link>
                             <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">

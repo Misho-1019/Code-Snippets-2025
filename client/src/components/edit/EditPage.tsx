@@ -62,41 +62,41 @@ export default function EditSnippet() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-6">Edit Snippet</h2>
+        <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-surface-800 shadow-lg rounded-lg">
+            <h2 className="text-2xl font-bold text-primary-700 dark:text-primary-300 mb-6">Edit Snippet</h2>
 
             <form className="space-y-5" onSubmit={handleSubmit(submitHandler)} noValidate>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                     <input type="text" {...register('title')}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
                     {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                     <textarea rows={3} {...register('description')}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
                     {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
                     <textarea rows={6} {...register('code')}
-                        className="w-full font-mono border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        className="w-full font-mono border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
                     {errors.code && <p className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
                     <input type="text" {...register('language')}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                        className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
                     {errors.language && <p className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
                 </div>
 
                 <div className="text-right">
                     <button type="submit" disabled={isSubmitting}
-                        className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition disabled:opacity-50">
+                        className="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition disabled:opacity-50">
                         Save Changes
                     </button>
                 </div>
