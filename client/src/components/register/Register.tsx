@@ -51,23 +51,20 @@ export default function Register() {
                 <form className="space-y-4" onSubmit={handleSubmit(registerHandler)} noValidate>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
-                        <input type="text" className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('username')} placeholder="Username..." />
-                        {errors.username && (<p className="text-red-500 text-sm mt-1">{errors.username.message}</p>)}
-                    </div>
-                    <div>
+                        <input type="text" aria-describedby={errors.username ? 'username-error' : undefined} className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('username')} placeholder="Username..." />
+                        {errors.username && (<p id="username-error" className="text-red-500 text-sm mt-1">{errors.username.message}</p>)}
+
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                        <input type="email" className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('email')} placeholder="Email..." />
-                        {errors.email && (<p className="text-red-500 text-sm mt-1">{errors.email.message}</p>)}
-                    </div>
-                    <div>
+                        <input type="email" aria-describedby={errors.email ? 'email-error' : undefined} className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('email')} placeholder="Email..." />
+                        {errors.email && (<p id="email-error" className="text-red-500 text-sm mt-1">{errors.email.message}</p>)}
+
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                        <input type="password" className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('password')} placeholder="Password..." />
-                        {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password.message}</p>)}
-                    </div>
-                    <div>
+                        <input type="password" aria-describedby={errors.password ? 'password-error' : undefined} className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('password')} placeholder="Password..." />
+                        {errors.password && (<p id="password-error" className="text-red-500 text-sm mt-1">{errors.password.message}</p>)}
+
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Repeat Password</label>
-                        <input type="password" className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('confirmPassword')} placeholder="Repeat password..." />
-                        {errors.confirmPassword && (<p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>)}
+                        <input type="password" aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined} className="mt-1 w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" {...register('confirmPassword')} placeholder="Repeat password..." />
+                        {errors.confirmPassword && (<p id="confirmPassword-error" className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>)}
                     </div>
                     <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded-md hover:bg-primary-700 transition" disabled={isSubmitting}>
                         {isSubmitting ? 'Registering...' : 'Register'}

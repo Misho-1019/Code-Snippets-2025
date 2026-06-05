@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 import { useToggleLike } from "../../api/likesApi";
@@ -22,6 +22,7 @@ export default function SnippetDetails() {
     const [likesCount, setLikesCount] = useState(0)
     const [likedByUser, setLikedByUser] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const deleteBtnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
         if (snippet && snippet.likes) {
@@ -29,6 +30,12 @@ export default function SnippetDetails() {
             setLikedByUser(snippet.likes.includes(userId))
         }
     }, [snippet, userId])
+
+    useEffect(() => {
+        if (!showDeleteModal) {
+            deleteBtnRef.current?.focus()
+        }
+    }, [showDeleteModal])
 
     if (isLoading) return <Spinner className="mt-20" size="lg" />
     if (!snippet) return <div className="text-center mt-10 text-gray-500 dark:text-gray-400">Snippet not found.</div>
@@ -82,7 +89,7 @@ export default function SnippetDetails() {
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{snippet.description}</p>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6" role="code" aria-label={`${snippet.language} code snippet`}>
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Code</h3>
                 <SyntaxHighlighter
                     language={snippet.language.toLowerCase()}
@@ -97,6 +104,7 @@ export default function SnippetDetails() {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={likeHandler}
+                        aria-label={likedByUser ? 'Unlike this snippet' : 'Like this snippet'}
                         className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-colors ${likedByUser ? "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300" : "bg-gray-100 dark:bg-surface-700 text-gray-600 dark:text-gray-300"}`}
                     >
                         {likedByUser ? <FaHeart /> : <FaRegHeart />}
@@ -113,7 +121,7 @@ export default function SnippetDetails() {
                             <Link to={`/snippets/${snippetId}/edit`} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
                                 Edit
                             </Link>
-                            <button onClick={snippetDeleteClickHandler} className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
+                            <button ref={deleteBtnRef} onClick={snippetDeleteClickHandler} aria-label="Delete snippet" className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors">
                                 Delete
                             </button>
                         </div>

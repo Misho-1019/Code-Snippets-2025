@@ -75,30 +75,30 @@ export default function EditSnippet() {
             <form className="space-y-5" onSubmit={handleSubmit(submitHandler)} noValidate>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
-                    <input type="text" {...register('title')}
+                    <input type="text" aria-describedby={errors.title ? 'title-error' : undefined} {...register('title')}
                         className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
-                    {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
+                    {errors.title && <p id="title-error" className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                    <textarea rows={3} {...register('description')}
+                    <textarea rows={3} aria-describedby={errors.description ? 'description-error' : undefined} {...register('description')}
                         className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
-                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
+                    {errors.description && <p id="description-error" className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
-                    <textarea rows={6} {...register('code')}
+                    <textarea rows={6} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
                         className="w-full font-mono border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
-                    {errors.code && <p className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
+                    {errors.code && <p id="code-error" className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
-                    <input type="text" {...register('language')}
+                    <input type="text" aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
                         className="w-full border border-gray-300 dark:border-surface-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100" />
-                    {errors.language && <p className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
+                    {errors.language && <p id="language-error" className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
                 </div>
 
                 <div className="text-right">

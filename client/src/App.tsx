@@ -26,8 +26,11 @@ function App() {
         <ErrorBoundary>
             <ThemeContext.Provider value={{ isDark, toggleTheme }}>
             <UserProvider>
+                <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-primary-600 focus:rounded-md focus:shadow-md">
+                    Skip to content
+                </a>
                 <Header />
-                <div key={location.pathname} className="animate-fade-in">
+                <main id="main-content" key={location.pathname} className="animate-fade-in" role="status">
                     <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/snippets' element={<SnippetList />} />
@@ -53,7 +56,7 @@ function App() {
                             </div>
                         } />
                     </Routes>
-                </div>
+                </main>
                 <ToastContainer position="top-right" />
             </UserProvider>
             </ThemeContext.Provider>
