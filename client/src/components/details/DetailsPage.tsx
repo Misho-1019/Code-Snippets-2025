@@ -5,6 +5,8 @@ import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
 import { useToggleLike } from "../../api/likesApi";
 import { showToast } from "../../utils/toastUtils";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
@@ -74,9 +76,13 @@ export default function SnippetDetails() {
 
             <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">Code</h3>
-                <pre className="bg-indigo-100 border border-indigo-200 rounded-md p-4 text-sm overflow-x-auto text-gray-800">
+                <SyntaxHighlighter
+                    language={snippet.language.toLowerCase()}
+                    style={oneLight}
+                    customStyle={{ borderRadius: '0.5rem', fontSize: '0.875rem' }}
+                >
                     {snippet.code}
-                </pre>
+                </SyntaxHighlighter>
             </div>
 
             <div className="flex justify-between items-center mb-6">

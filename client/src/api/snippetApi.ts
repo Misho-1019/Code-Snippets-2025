@@ -5,8 +5,10 @@ import type { Snippet, PaginatedResponse } from "../types"
 
 const baseUrl = '/snippets'
 
-export const useSnippets = (queryParams?: Record<string, string | number>) => {
+export const useSnippets = (search?: string, language?: string, page?: number) => {
     const [snippets, setSnippets] = useState<Snippet[]>([])
+    const [totalPages, setTotalPages] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<unknown>(null)
 
@@ -14,23 +16,28 @@ export const useSnippets = (queryParams?: Record<string, string | number>) => {
         setIsLoading(true)
         setError(null)
 
-        const params = queryParams ? '?' + new URLSearchParams(
-            Object.entries(queryParams).map(([k, v]) => [k, String(v)])
-        ).toString() : ''
+        const params: Record<string, string> = {}
+        if (search) params.search = search
+        if (language) params.language = language
+        if (page && page > 1) params.page = String(page)
 
-        request.get(baseUrl + params)
+        const qs = Object.keys(params).length ? '?' + new URLSearchParams(params).toString() : ''
+
+        request.get(baseUrl + qs)
             .then(res => {
                 const data = res as PaginatedResponse
                 setSnippets(data.snippets)
+                setTotalPages(data.totalPages)
+                setCurrentPage(data.currentPage)
                 setIsLoading(false)
             })
             .catch(err => {
                 setError(err)
                 setIsLoading(false)
             })
-    }, [queryParams])
+    }, [search, language, page])
 
-    return { snippets, isLoading, error }
+    return { snippets, totalPages, currentPage, isLoading, error }
 }
 
 export const useLatestSnippets = () => {
