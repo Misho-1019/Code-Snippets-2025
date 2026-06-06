@@ -34,6 +34,7 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
             })
             .catch(err => {
                 if (err instanceof DOMException && err.name === 'AbortError') return
+                console.error('useSnippets:', err)
                 setError(err)
                 setIsLoading(false)
             })
@@ -64,6 +65,7 @@ export const useLatestSnippets = () => {
             })
             .catch(err => {
                 if (err instanceof DOMException && err.name === 'AbortError') return
+                console.error('useLatestSnippets:', err)
                 setError(err)
                 setIsLoading(false)
             })

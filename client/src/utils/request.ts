@@ -62,7 +62,7 @@ const request = async (method: RequestMethod, url: string, data?: unknown, optio
 }
 
 export default {
-    get: request.bind(null, 'GET'),
+    get: (url: string, options?: RequestOptions) => request('GET', url, undefined, options),
     post: request.bind(null, 'POST'),
     put: request.bind(null, 'PUT'),
     delete: request.bind(null, 'DELETE'),
