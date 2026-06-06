@@ -6,6 +6,7 @@ import { showToast } from "../../utils/toastUtils";
 import { useUserContext } from "../../context/UserContext";
 import type { Comment } from "../../types";
 import Spinner from "../Spinner";
+import Breadcrumbs from "../Breadcrumbs";
 
 export default function CommentsPage() {
     const { userId } = useAuth()
@@ -59,6 +60,11 @@ export default function CommentsPage() {
     return (
         <main className="min-h-screen py-16 px-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800">
             <div className="max-w-4xl mx-auto text-center">
+                <Breadcrumbs items={[
+                    { label: 'Snippets', href: '/snippets' },
+                    { label: 'Snippet', href: `/snippets/${snippetId}/details` },
+                    { label: 'Comments' },
+                ]} />
                 <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">Comments</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
                     Share your thoughts and interact with others.

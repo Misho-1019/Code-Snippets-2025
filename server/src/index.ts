@@ -36,17 +36,6 @@ app.use(cors({
     credentials: true,
 }))
 
-try {
-    const uri = process.env.MONGO_URI as string;
-    await mongoose.connect(uri)
-
-    console.log('DB connected successfully!');
-} catch (err) {
-    console.error('Cannot connect to DB!');
-    console.error(err instanceof Error ? err.message : err);
-    process.exit(1)
-}
-
 app.use(express.json())
 app.use(cookieParser())
 app.use(mongoSanitize)
@@ -76,4 +65,25 @@ app.use(errorHandler)
 
 const port = process.env.PORT || 3030;
 
-app.listen(port, () => console.log(`Server is listening on http://localhost:${port}...`))
+async function start() {
+    try {
+        const uri = process.env.MONGO_URI as string;
+        await mongoose.connect(uri)
+        console.log('DB connected successfully!');
+    } catch (err) {
+        console.error('Cannot connect to DB!');
+        console.error(err instanceof Error ? err.message : err);
+        process.exit(1)
+    }
+
+    mongoose.connection.on('error', (err) => {
+        console.error('DB connection error:', err.message)
+    })
+    mongoose.connection.on('disconnected', () => {
+        console.warn('DB disconnected — attempting reconnect...')
+    })
+
+    app.listen(port, () => console.log(`Server is listening on http://localhost:${port}...`))
+}
+
+start()

@@ -68,3 +68,19 @@ export default {
     delete: request.bind(null, 'DELETE'),
     baseRequest: request,
 }
+
+export async function api<T>(url: string, options?: RequestOptions): Promise<T> {
+    return request('GET', url, undefined, options) as Promise<T>
+}
+
+export async function apiPost<T>(url: string, data?: unknown, options?: RequestOptions): Promise<T> {
+    return request('POST', url, data, options) as Promise<T>
+}
+
+export async function apiPut<T>(url: string, data?: unknown, options?: RequestOptions): Promise<T> {
+    return request('PUT', url, data, options) as Promise<T>
+}
+
+export async function apiDelete<T>(url: string, options?: RequestOptions): Promise<T> {
+    return request('DELETE', url, undefined, options) as Promise<T>
+}

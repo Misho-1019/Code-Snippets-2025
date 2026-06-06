@@ -2,6 +2,14 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useLatestSnippets } from "../../api/snippetApi";
 import Spinner from "../Spinner";
+import { FiCode, FiSearch, FiHeart, FiShare2 } from "react-icons/fi";
+
+const features = [
+    { icon: FiCode, title: 'Save & Organize', desc: 'Store code snippets with titles, descriptions, and language tags for easy retrieval.' },
+    { icon: FiSearch, title: 'Search & Filter', desc: 'Full-text search across titles and descriptions. Filter by programming language.' },
+    { icon: FiHeart, title: 'Like & Comment', desc: 'Engage with the community — like useful snippets and leave feedback.' },
+    { icon: FiShare2, title: 'Syntax Highlighting', desc: 'Code is displayed with beautiful Prism syntax highlighting in light and dark themes.' },
+]
 
 export default function Home() {
     const navigate = useNavigate()
@@ -29,6 +37,16 @@ export default function Home() {
                     <button onClick={scrollToLatest} className="bg-white dark:bg-surface-800 border border-primary-600 text-primary-600 px-6 py-2 rounded-full hover:bg-indigo-50 dark:hover:bg-surface-700 active:scale-95 transition">
                         Learn More
                     </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    {features.map(({ icon: Icon, title, desc }) => (
+                        <div key={title} className="bg-white dark:bg-surface-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-surface-600 text-left">
+                            <Icon className="w-8 h-8 text-primary-600 dark:text-primary-400 mb-3" />
+                            <h4 className="font-semibold text-gray-800 dark:text-white mb-1">{title}</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{desc}</p>
+                        </div>
+                    ))}
                 </div>
 
                 <h3 id="latest-snippets" className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-6">Latest Snippets</h3>

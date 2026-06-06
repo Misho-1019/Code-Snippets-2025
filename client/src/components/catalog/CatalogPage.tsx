@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useEffect, useState, useRef } from "react";
+import { useSearchParams, Link } from "react-router";
 import ItemCatalog from "./item/ItemCatalog";
 import { useSnippets } from "../../api/snippetApi";
 import Spinner from "../Spinner";
@@ -12,6 +12,7 @@ export default function SnippetList() {
     const page = Number(searchParams.get('page')) || 1
 
     const [searchInput, setSearchInput] = useState(search)
+    const debounceRef = useRef<ReturnType<typeof setTimeout>>()
 
     useEffect(() => {
         setSearchInput(search)
@@ -71,7 +72,14 @@ export default function SnippetList() {
                             <input
                                 type="text"
                                 value={searchInput}
-                                onChange={e => setSearchInput(e.target.value)}
+                                onChange={e => {
+                                    const value = e.target.value
+                                    setSearchInput(value)
+                                    clearTimeout(debounceRef.current)
+                                    debounceRef.current = setTimeout(() => {
+                                        updateParams({ search: value })
+                                    }, 300)
+                                }}
                                 placeholder="Search snippets..."
                                 className="px-3 py-2 border border-gray-300 dark:border-surface-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 w-full sm:w-48"
                             />
@@ -136,6 +144,11 @@ export default function SnippetList() {
                         <h3 className="text-xl text-gray-500 dark:text-gray-400 font-semibold">
                             {search || language ? 'No snippets match your filters.' : 'No snippets yet'}
                         </h3>
+                        {!search && !language && (
+                            <Link to="/snippets/create" className="px-4 py-2 text-sm bg-primary-600 text-white rounded-md hover:bg-primary-700 active:scale-95 transition">
+                                Create your first snippet
+                            </Link>
+                        )}
                     </div>
                 )}
 
