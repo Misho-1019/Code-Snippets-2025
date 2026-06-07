@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react"
 import request from "../utils/request"
 import useAuth from "../hooks/useAuth"
-import type { Snippet, PaginatedResponse } from "../types"
+import type { Snippet, PaginatedResponse, LanguageCount, TagCount } from "../types"
 
 const baseUrl = '/api/snippets'
 
-export const useSnippets = (search?: string, language?: string, page?: number) => {
+export const useSnippets = (search?: string, language?: string, page?: number, tag?: string) => {
     const [snippets, setSnippets] = useState<Snippet[]>([])
     const [totalPages, setTotalPages] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
@@ -21,6 +21,7 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
         if (search) params.search = search
         if (language) params.language = language
         if (page && page > 1) params.page = String(page)
+        if (tag) params.tag = tag
 
         const qs = Object.keys(params).length ? '?' + new URLSearchParams(params).toString() : ''
 
@@ -40,7 +41,7 @@ export const useSnippets = (search?: string, language?: string, page?: number) =
             })
 
         return () => abort.abort()
-    }, [search, language, page])
+    }, [search, language, page, tag])
 
     return { snippets, totalPages, currentPage, isLoading, error }
 }
@@ -133,4 +134,36 @@ export const useDeleteSnippet = () => {
         authRequest.delete(`${baseUrl}/${snippetId}`)
 
     return { deleteSnippet }
+}
+
+export const useLanguages = () => {
+    const [languages, setLanguages] = useState<LanguageCount[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        request.get(`${baseUrl}/languages`)
+            .then(data => {
+                setLanguages(data as LanguageCount[])
+                setIsLoading(false)
+            })
+            .catch(() => setIsLoading(false))
+    }, [])
+
+    return { languages, isLoading }
+}
+
+export const useTags = () => {
+    const [tags, setTags] = useState<TagCount[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        request.get(`${baseUrl}/tags`)
+            .then(data => {
+                setTags(data as TagCount[])
+                setIsLoading(false)
+            })
+            .catch(() => setIsLoading(false))
+    }, [])
+
+    return { tags, isLoading }
 }

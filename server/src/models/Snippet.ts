@@ -5,6 +5,7 @@ export interface ISnippet extends Document {
     description: string;
     code: string;
     language: string;
+    tags: string[];
     creator: Types.ObjectId;
     createdAt: Date;
     likes: Types.ObjectId[];
@@ -40,10 +41,16 @@ const snippetSchema = new Schema<ISnippet>({
     likes: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
-    }]
+    }],
+    tags: [{
+        type: String,
+        trim: true,
+        lowercase: true,
+    }],
 })
 
 snippetSchema.index({ title: 'text', description: 'text' }, { language_override: 'lang' })
+snippetSchema.index({ tags: 1 })
 
 const Snippet = model<ISnippet>('Snippet', snippetSchema);
 

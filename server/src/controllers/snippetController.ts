@@ -3,6 +3,7 @@ import snippetService from "../services/snippetService.js";
 import commentService from "../services/commentService.js";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import likesService from "../services/likesService.js";
+import Snippet from "../models/Snippet.js";
 import {
     createSnippetSchema,
     updateSnippetSchema,
@@ -51,11 +52,13 @@ snippetController.get('/', validateQuery(paginationSchema), async (req: Request,
     const limit = Number(req.query.limit) || 10;
 
     const { search, language } = req.query as Record<string, unknown> as { search?: string; language?: string }
+    const tag = (req.query as Record<string, string>).tag
 
     const filter: Record<string, unknown> = {};
 
     if (search) filter.$text = { $search: search };
     if (language) filter.language = language;
+    if (tag) filter.tags = tag;
 
     try {
         const [snippets, totalCount] = await Promise.all([
@@ -108,6 +111,32 @@ snippetController.get('/latest', async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err instanceof Error ? err.message : err);
         res.status(500).json({ error: 'Server error while fetching latest snippets!' })
+    }
+})
+
+snippetController.get('/languages', async (_req: Request, res: Response) => {
+    try {
+        const languages = await Snippet.aggregate([
+            { $group: { _id: '$language', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+        ])
+        res.json(languages.map((l: { _id: string; count: number }) => ({ name: l._id, count: l.count })))
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch languages' })
+    }
+})
+
+snippetController.get('/tags', async (_req: Request, res: Response) => {
+    try {
+        const tags = await Snippet.aggregate([
+            { $unwind: '$tags' },
+            { $group: { _id: '$tags', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 30 },
+        ])
+        res.json(tags.map((t: { _id: string; count: number }) => ({ name: t._id, count: t.count })))
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch tags' })
     }
 })
 

@@ -4,6 +4,7 @@ export interface Snippet {
     description: string
     code: string
     language: string
+    tags: string[]
     creator: string
     createdAt: string
     likes: string[]
@@ -40,4 +41,14 @@ export interface PaginatedResponse {
 export interface LikeResult {
     likesCount: number
     likedByUser: boolean
+}
+
+export interface LanguageCount {
+    name: string
+    count: number
+}
+
+export interface TagCount {
+    name: string
+    count: number
 }

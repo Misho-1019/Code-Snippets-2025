@@ -4,11 +4,13 @@ import ItemCatalog from "./item/ItemCatalog";
 import { useSnippets } from "../../api/snippetApi";
 import Spinner from "../Spinner";
 import SkeletonCard from "../SkeletonCard";
+import Sidebar from "./Sidebar";
 
 export default function SnippetList() {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search') || ''
     const language = searchParams.get('language') || ''
+    const tag = searchParams.get('tag') || ''
     const page = Number(searchParams.get('page')) || 1
 
     const [searchInput, setSearchInput] = useState(search)
@@ -18,7 +20,7 @@ export default function SnippetList() {
         setSearchInput(search)
     }, [search])
 
-    const { snippets, totalPages, currentPage, isLoading, error } = useSnippets(search || undefined, language || undefined, page)
+    const { snippets, totalPages, currentPage, isLoading, error } = useSnippets(search || undefined, language || undefined, page, tag || undefined)
 
     useEffect(() => {
         document.title = 'Snippets — Code Snippet'
@@ -61,7 +63,11 @@ export default function SnippetList() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto flex gap-8">
+                <div className="hidden lg:block w-52 flex-shrink-0">
+                    <Sidebar />
+                </div>
+                <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b dark:border-surface-600 pb-4 gap-4">
                     <h2 className="text-3xl font-extrabold text-primary-700 dark:text-primary-300">
                         Snippets
@@ -199,6 +205,7 @@ export default function SnippetList() {
                         )}
                     </>
                 )}
+            </div>
             </div>
         </div>
     );

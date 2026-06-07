@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useCreateSnippet } from "../../api/snippetApi";
+import { useCreateSnippet, useTags } from "../../api/snippetApi";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
 import Breadcrumbs from "../Breadcrumbs";
+import TagInput from "../catalog/TagInput";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
@@ -24,6 +25,8 @@ interface CreateForm {
 export default function CreateSnippet() {
     const navigate = useNavigate();
     const { create } = useCreateSnippet()
+    const { tags: suggestedTags } = useTags()
+    const [tags, setTags] = useState<string[]>([])
 
     useEffect(() => {
         document.title = 'Create Snippet — Code Snippet'
@@ -39,7 +42,7 @@ export default function CreateSnippet() {
 
     const submitHandler = async (data: CreateForm) => {
         try {
-            await create(data as unknown as Record<string, string>)
+            await create({ ...data, tags } as unknown as Record<string, string>)
 
             showToast('Successfully created!', 'success')
             navigate('/snippets')
@@ -90,6 +93,15 @@ export default function CreateSnippet() {
                             className={`mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.language ? 'border-red-500' : touchedFields.language ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
                             placeholder="e.g., JavaScript, Python" />
                         {errors.language && <p id="language-error" className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tags</label>
+                        <TagInput
+                            tags={tags}
+                            onChange={setTags}
+                            suggestions={suggestedTags.map(t => t.name)}
+                        />
                     </div>
 
                     <div className="pt-4">

@@ -6,9 +6,10 @@ interface ItemCatalogProps {
     language: string
     description: string
     code: string
+    tags?: string[]
 }
 
-export default function ItemCatalog({ _id, title, language, description, code }: ItemCatalogProps) {
+export default function ItemCatalog({ _id, title, language, description, code, tags = [] }: ItemCatalogProps) {
     return (
         <div className="bg-white dark:bg-surface-800 shadow-md rounded-xl p-6 flex flex-col justify-between hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
             <div>
@@ -18,6 +19,15 @@ export default function ItemCatalog({ _id, title, language, description, code }:
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                     Language: <span className="font-medium">{language}</span>
                 </p>
+                {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                        {tags.map(tag => (
+                            <span key={tag} className="px-2 py-0.5 bg-primary-50 dark:bg-surface-700 text-primary-600 dark:text-primary-400 text-xs rounded-full">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
                 <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
                     {description}
                 </p>

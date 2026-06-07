@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
-import { useEditSnippet, useSnippet } from "../../api/snippetApi";
+import { useEditSnippet, useSnippet, useTags } from "../../api/snippetApi";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
 import Spinner from "../Spinner";
 import Breadcrumbs from "../Breadcrumbs";
+import TagInput from "../catalog/TagInput";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
@@ -29,10 +30,16 @@ export default function EditSnippet() {
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { edit } = useEditSnippet()
+    const { tags: suggestedTags } = useTags()
+    const [tags, setTags] = useState<string[]>(snippet?.tags || [])
 
     useEffect(() => {
         document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : error ? 'Error loading snippet — Code Snippet' : 'Code Snippet'
     }, [snippet, error])
+
+    useEffect(() => {
+        if (snippet?.tags) setTags(snippet.tags)
+    }, [snippet])
 
     const {
         register,
@@ -50,7 +57,7 @@ export default function EditSnippet() {
 
     const submitHandler = async (data: EditForm) => {
         try {
-            await edit(snippetId!, data as unknown as Record<string, string>)
+            await edit(snippetId!, { ...data, tags } as unknown as Record<string, string>)
 
             showToast('Successfully edited!', 'success')
             navigate(`/snippets/${snippetId}/details`)
@@ -105,6 +112,15 @@ export default function EditSnippet() {
                     <input type="text" aria-invalid={!!errors.language} aria-describedby={errors.language ? 'language-error' : undefined} {...register('language')}
                         className={`w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.language ? 'border-red-500' : touchedFields.language ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
                     {errors.language && <p id="language-error" className="text-red-500 text-sm mt-1">{errors.language.message}</p>}
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tags</label>
+                    <TagInput
+                        tags={tags}
+                        onChange={setTags}
+                        suggestions={suggestedTags.map(t => t.name)}
+                    />
                 </div>
 
                 <div className="text-right">

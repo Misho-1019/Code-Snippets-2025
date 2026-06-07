@@ -6,6 +6,7 @@ export const createSnippetSchema = z.object({
     description: z.string().min(1, 'Description is required'),
     code: z.string().min(1, 'Code is required'),
     language: z.string().min(1, 'Language is required'),
+    tags: z.array(z.string().trim().toLowerCase()).optional().default([]),
 })
 
 export const updateSnippetSchema = z.object({
@@ -13,6 +14,7 @@ export const updateSnippetSchema = z.object({
     description: z.string().optional(),
     code: z.string().optional(),
     language: z.string().optional(),
+    tags: z.array(z.string().trim().toLowerCase()).optional(),
 })
 
 export const createCommentSchema = z.object({
@@ -24,6 +26,7 @@ export const paginationSchema = z.object({
     limit: z.coerce.number().positive().max(100).optional(),
     search: z.string().optional(),
     language: z.string().optional(),
+    tag: z.string().optional(),
 })
 
 export const validate = (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction): void => {
