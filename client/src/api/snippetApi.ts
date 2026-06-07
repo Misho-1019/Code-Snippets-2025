@@ -136,6 +136,15 @@ export const useDeleteSnippet = () => {
     return { deleteSnippet }
 }
 
+export const useForkSnippet = () => {
+    const { request: authRequest } = useAuth()
+
+    const forkSnippet = (snippetId: string): Promise<unknown> =>
+        authRequest.post(`${baseUrl}/${snippetId}/fork`)
+
+    return { forkSnippet }
+}
+
 export const useLanguages = () => {
     const [languages, setLanguages] = useState<LanguageCount[]>([])
     const [isLoading, setIsLoading] = useState(true)

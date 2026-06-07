@@ -9,18 +9,17 @@ import { showToast } from "../../utils/toastUtils";
 import Spinner from "../Spinner";
 import Breadcrumbs from "../Breadcrumbs";
 import TagInput from "../catalog/TagInput";
+import CodeEditor from "../CodeEditor";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
     description: yup.string().required('Description is required'),
-    code: yup.string().required('Code is required'),
     language: yup.string().required('Language is required'),
 })
 
 interface EditForm {
     title: string
     description: string
-    code: string
     language: string
 }
 
@@ -33,6 +32,7 @@ export default function EditSnippet() {
     const { tags: suggestedTags } = useTags()
     const [tags, setTags] = useState<string[]>(snippet?.tags || [])
     const [visibility, setVisibility] = useState<string>(snippet?.visibility || 'private')
+    const [code, setCode] = useState('')
 
     useEffect(() => {
         document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : error ? 'Error loading snippet — Code Snippet' : 'Code Snippet'
@@ -40,7 +40,10 @@ export default function EditSnippet() {
 
     useEffect(() => {
         if (snippet?.tags) setTags(snippet.tags)
-        if (snippet) setVisibility(snippet.visibility || 'private')
+        if (snippet) {
+            setVisibility(snippet.visibility || 'private')
+            setCode(snippet.code)
+        }
     }, [snippet])
 
     const {
@@ -52,14 +55,17 @@ export default function EditSnippet() {
         values: snippet ? {
             title: snippet.title,
             description: snippet.description,
-            code: snippet.code,
             language: snippet.language,
         } : undefined,
     })
 
     const submitHandler = async (data: EditForm) => {
+        if (!code.trim()) {
+            showToast('Code is required', 'error')
+            return
+        }
         try {
-            await edit(snippetId!, { ...data, tags, visibility } as unknown as Record<string, string>)
+            await edit(snippetId!, { ...data, code, tags, visibility } as unknown as Record<string, string>)
 
             showToast('Successfully edited!', 'success')
             navigate(`/snippets/${snippetId}/details`)
@@ -104,9 +110,11 @@ export default function EditSnippet() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
-                    <textarea rows={6} aria-invalid={!!errors.code} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
-                        className={`w-full font-mono border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.code ? 'border-red-500' : touchedFields.code ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`} />
-                    {errors.code && <p id="code-error" className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
+                    <CodeEditor
+                        value={code}
+                        onChange={setCode}
+                        language={undefined}
+                    />
                 </div>
 
                 <div>

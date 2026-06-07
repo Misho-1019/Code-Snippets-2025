@@ -1,25 +1,23 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { useDeleteSnippet, useSnippet } from "../../api/snippetApi";
+import { useDeleteSnippet, useSnippet, useForkSnippet } from "../../api/snippetApi";
 import { useToggleLike } from "../../api/likesApi";
 import { showToast } from "../../utils/toastUtils";
 import { FaHeart, FaRegHeart, FaCopy } from "react-icons/fa";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneLight, oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import CodeEditor from "../CodeEditor";
 import Spinner from "../Spinner";
 import SkeletonDetails from "../SkeletonDetails";
 import Breadcrumbs from "../Breadcrumbs";
 import ConfirmModal from "../ConfirmModal";
-import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
     const { userId, isAuthenticated } = useAuth()
-    const { isDark } = useContext(ThemeContext)
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { deleteSnippet } = useDeleteSnippet()
+    const { forkSnippet } = useForkSnippet()
     const { toggleLike } = useToggleLike()
 
     const [likesCount, setLikesCount] = useState(0)
@@ -28,6 +26,7 @@ export default function SnippetDetails() {
     const [isCopied, setIsCopied] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
     const [isLiking, setIsLiking] = useState(false)
+    const [isForking, setIsForking] = useState(false)
     const deleteBtnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
@@ -99,6 +98,19 @@ export default function SnippetDetails() {
 
     const isOwner = userId === snippet.creator
 
+    const forkHandler = async () => {
+        try {
+            setIsForking(true)
+            const forked = await forkSnippet(snippetId!) as { _id: string }
+            showToast('Snippet forked!', 'success')
+            navigate(`/snippets/${forked._id}/details`)
+        } catch (err) {
+            showToast((err as Error).message, 'error')
+        } finally {
+            setIsForking(false)
+        }
+    }
+
     const copyCode = async () => {
         try {
             await navigator.clipboard.writeText(snippet.code)
@@ -145,13 +157,11 @@ export default function SnippetDetails() {
                         {isCopied ? 'Copied!' : 'Copy'}
                     </button>
                 </div>
-                <SyntaxHighlighter
-                    language={snippet.language?.toLowerCase() ?? ''}
-                    style={isDark ? oneDark : oneLight}
-                    customStyle={{ borderRadius: '0.5rem', fontSize: '0.875rem' }}
-                >
-                    {snippet.code}
-                </SyntaxHighlighter>
+                <CodeEditor
+                    value={snippet.code}
+                    language={snippet.language}
+                    readOnly
+                />
             </div>
 
             <div className="flex justify-between items-center mb-6">
@@ -175,6 +185,15 @@ export default function SnippetDetails() {
                 </div>
 
                 <div className="flex justify-end gap-2">
+                    {isAuthenticated && (
+                        <button
+                            onClick={forkHandler}
+                            disabled={isForking}
+                            className="px-4 py-2 text-sm font-medium text-primary-600 border border-primary-600 rounded-md hover:bg-primary-50 dark:hover:bg-surface-700 transition-colors disabled:opacity-50"
+                        >
+                            {isForking ? 'Forking...' : 'Fork'}
+                        </button>
+                    )}
                     <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
                         Comments
                     </Link>

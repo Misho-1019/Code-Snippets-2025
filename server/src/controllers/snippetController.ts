@@ -503,4 +503,30 @@ snippetController.post('/:snippetId/likes', isAuth, async (req: Request, res: Re
     }
 })
 
+snippetController.post('/:snippetId/fork', isAuth, async (req: Request, res: Response) => {
+    const snippetId = req.params.snippetId as string;
+    const userId = req.user!.id;
+
+    try {
+        const original = await snippetService.getOne(snippetId)
+        if (!original) {
+            res.status(404).json({ error: 'Snippet not found!' })
+            return
+        }
+
+        const forked = await snippetService.createSnippet({
+            title: original.title + ' (fork)',
+            description: original.description,
+            code: original.code,
+            language: original.language,
+            tags: original.tags,
+            visibility: 'private',
+        }, userId)
+
+        res.status(201).json(forked)
+    } catch (err) {
+        res.status(500).json({ error: err instanceof Error ? err.message : 'Failed to fork snippet' })
+    }
+})
+
 export default snippetController;

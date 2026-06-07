@@ -7,18 +7,17 @@ import * as yup from "yup";
 import { showToast } from "../../utils/toastUtils";
 import Breadcrumbs from "../Breadcrumbs";
 import TagInput from "../catalog/TagInput";
+import CodeEditor from "../CodeEditor";
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
     description: yup.string().required('Description is required'),
-    code: yup.string().required('Code is required'),
     language: yup.string().required('Language is required'),
 })
 
 interface CreateForm {
     title: string
     description: string
-    code: string
     language: string
 }
 
@@ -28,6 +27,7 @@ export default function CreateSnippet() {
     const { tags: suggestedTags } = useTags()
     const [tags, setTags] = useState<string[]>([])
     const [visibility, setVisibility] = useState('private')
+    const [code, setCode] = useState('')
 
     useEffect(() => {
         document.title = 'Create Snippet — Code Snippet'
@@ -42,8 +42,12 @@ export default function CreateSnippet() {
     })
 
     const submitHandler = async (data: CreateForm) => {
+        if (!code.trim()) {
+            showToast('Code is required', 'error')
+            return
+        }
         try {
-            await create({ ...data, tags, visibility } as unknown as Record<string, string>)
+            await create({ ...data, code, tags, visibility } as unknown as Record<string, string>)
 
             showToast('Successfully created!', 'success')
             navigate('/snippets')
@@ -81,11 +85,12 @@ export default function CreateSnippet() {
                     </div>
 
                     <div>
-                        <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Code</label>
-                        <textarea id="code" rows={6} aria-invalid={!!errors.code} aria-describedby={errors.code ? 'code-error' : undefined} {...register('code')}
-                            className={`mt-1 block w-full font-mono px-4 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-surface-700 dark:text-gray-100 ${errors.code ? 'border-red-500' : touchedFields.code ? 'border-green-500' : 'border-gray-300 dark:border-surface-600'}`}
-                            placeholder="Paste your code here" />
-                        {errors.code && <p id="code-error" className="text-red-500 text-sm mt-1">{errors.code.message}</p>}
+                        <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Code</label>
+                        <CodeEditor
+                            value={code}
+                            onChange={setCode}
+                            language={undefined}
+                        />
                     </div>
 
                     <div>
