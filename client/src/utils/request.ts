@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || ''
+
 function getCookie(name: string): string | undefined {
     const value = `; ${document.cookie}`
     const parts = value.split(`; ${name}=`)
@@ -40,7 +42,7 @@ const request = async (method: RequestMethod, url: string, data?: unknown, optio
         ...options,
     }
 
-    const response = await fetch(url, options as RequestInit)
+    const response = await fetch(API_BASE + url, options as RequestInit)
 
     if (!response.ok) {
         let errorResult: unknown
