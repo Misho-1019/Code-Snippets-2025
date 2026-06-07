@@ -5,6 +5,7 @@ export interface Snippet {
     code: string
     language: string
     tags: string[]
+    visibility?: 'private' | 'public'
     creator: string
     createdAt: string
     likes: string[]

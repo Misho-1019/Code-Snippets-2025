@@ -16,12 +16,34 @@ import EditSnippet from './components/edit/EditPage'
 import CommentsPage from './components/comments/CommentPage'
 import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
+import CommandPalette from './components/CommandPalette'
+import UserProfilePage from './components/profile/UserProfilePage'
 import { ThemeContext } from './context/ThemeContext'
 import useTheme from './hooks/useTheme'
+import usePersistedState from './hooks/usePersistedState'
+import Onboarding from './components/Onboarding'
+import { useState, useEffect } from 'react'
+import type { Snippet } from './types'
+import request from './utils/request'
 
 function App() {
     const { isDark, toggleTheme } = useTheme()
     const location = useLocation()
+    const [snippetTitles, setSnippetTitles] = useState<{ _id: string; title: string }[]>([])
+    const [showOnboarding, setShowOnboarding] = usePersistedState('onboarding-complete', true)
+
+    useEffect(() => {
+        request.get('/api/snippets?limit=100')
+            .then(data => {
+                const res = data as { snippets: Snippet[] }
+                setSnippetTitles(res.snippets.map(s => ({ _id: s._id, title: s.title })))
+            })
+            .catch(() => {})
+    }, [location.pathname])
+
+    if (showOnboarding) {
+        return <Onboarding onDismiss={() => setShowOnboarding(false)} />
+    }
 
     return (
         <ErrorBoundary>
@@ -37,6 +59,8 @@ function App() {
                         <Route path='/' element={<Home />} />
                         <Route path='/snippets' element={<SnippetList />} />
                         <Route path='/snippets/:snippetId/details' element={<SnippetDetails />} />
+                        <Route path='/u/:username' element={<UserProfilePage />} />
+                        <Route path='/explore' element={<SnippetList />} />
 
                         <Route element={<AuthGuard />}>
                             <Route path='/logout' element={<Logout />} />
@@ -60,6 +84,7 @@ function App() {
                     </Routes>
                 </main>
                 <Footer />
+                <CommandPalette snippetTitles={snippetTitles} />
                 <ToastContainer position="top-right" autoClose={3000} theme="colored" />
                 </div>
             </UserProvider>

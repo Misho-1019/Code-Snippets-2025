@@ -5,6 +5,7 @@ export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    createdAt: Date;
 }
 
 const userSchema = new Schema<IUser>({
@@ -27,7 +28,7 @@ const userSchema = new Schema<IUser>({
         minLength: 6,
         trim: true,
     },
-})
+}, { timestamps: true })
 
 userSchema.pre('save', async function () {
     if (!this.isModified('password')) return

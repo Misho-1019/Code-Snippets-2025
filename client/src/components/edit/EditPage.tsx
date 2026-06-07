@@ -32,6 +32,7 @@ export default function EditSnippet() {
     const { edit } = useEditSnippet()
     const { tags: suggestedTags } = useTags()
     const [tags, setTags] = useState<string[]>(snippet?.tags || [])
+    const [visibility, setVisibility] = useState<string>(snippet?.visibility || 'private')
 
     useEffect(() => {
         document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : error ? 'Error loading snippet — Code Snippet' : 'Code Snippet'
@@ -39,6 +40,7 @@ export default function EditSnippet() {
 
     useEffect(() => {
         if (snippet?.tags) setTags(snippet.tags)
+        if (snippet) setVisibility(snippet.visibility || 'private')
     }, [snippet])
 
     const {
@@ -57,7 +59,7 @@ export default function EditSnippet() {
 
     const submitHandler = async (data: EditForm) => {
         try {
-            await edit(snippetId!, { ...data, tags } as unknown as Record<string, string>)
+            await edit(snippetId!, { ...data, tags, visibility } as unknown as Record<string, string>)
 
             showToast('Successfully edited!', 'success')
             navigate(`/snippets/${snippetId}/details`)
@@ -121,6 +123,18 @@ export default function EditSnippet() {
                         onChange={setTags}
                         suggestions={suggestedTags.map(t => t.name)}
                     />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visibility</label>
+                    <select
+                        value={visibility}
+                        onChange={e => setVisibility(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                    >
+                        <option value="private">Private — only you</option>
+                        <option value="public">Public — visible to everyone</option>
+                    </select>
                 </div>
 
                 <div className="text-right">

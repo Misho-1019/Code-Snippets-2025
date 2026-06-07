@@ -6,6 +6,7 @@ export interface ISnippet extends Document {
     code: string;
     language: string;
     tags: string[];
+    visibility: 'private' | 'public';
     creator: Types.ObjectId;
     createdAt: Date;
     likes: Types.ObjectId[];
@@ -47,6 +48,11 @@ const snippetSchema = new Schema<ISnippet>({
         trim: true,
         lowercase: true,
     }],
+    visibility: {
+        type: String,
+        enum: ['private', 'public'],
+        default: 'private',
+    },
 })
 
 snippetSchema.index({ title: 'text', description: 'text' }, { language_override: 'lang' })

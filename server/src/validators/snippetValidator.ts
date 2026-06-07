@@ -7,6 +7,7 @@ export const createSnippetSchema = z.object({
     code: z.string().min(1, 'Code is required'),
     language: z.string().min(1, 'Language is required'),
     tags: z.array(z.string().trim().toLowerCase()).optional().default([]),
+    visibility: z.enum(['private', 'public']).optional().default('private'),
 })
 
 export const updateSnippetSchema = z.object({
@@ -15,6 +16,7 @@ export const updateSnippetSchema = z.object({
     code: z.string().optional(),
     language: z.string().optional(),
     tags: z.array(z.string().trim().toLowerCase()).optional(),
+    visibility: z.enum(['private', 'public']).optional(),
 })
 
 export const createCommentSchema = z.object({

@@ -27,6 +27,7 @@ export default function CreateSnippet() {
     const { create } = useCreateSnippet()
     const { tags: suggestedTags } = useTags()
     const [tags, setTags] = useState<string[]>([])
+    const [visibility, setVisibility] = useState('private')
 
     useEffect(() => {
         document.title = 'Create Snippet — Code Snippet'
@@ -42,7 +43,7 @@ export default function CreateSnippet() {
 
     const submitHandler = async (data: CreateForm) => {
         try {
-            await create({ ...data, tags } as unknown as Record<string, string>)
+            await create({ ...data, tags, visibility } as unknown as Record<string, string>)
 
             showToast('Successfully created!', 'success')
             navigate('/snippets')
@@ -102,6 +103,18 @@ export default function CreateSnippet() {
                             onChange={setTags}
                             suggestions={suggestedTags.map(t => t.name)}
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visibility</label>
+                        <select
+                            value={visibility}
+                            onChange={e => setVisibility(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-surface-600 rounded-md focus:ring-2 focus:ring-primary-500 dark:bg-surface-700 dark:text-gray-100"
+                        >
+                            <option value="private">Private — only you</option>
+                            <option value="public">Public — visible to everyone</option>
+                        </select>
                     </div>
 
                     <div className="pt-4">

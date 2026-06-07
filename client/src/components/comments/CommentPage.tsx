@@ -17,6 +17,7 @@ export default function CommentsPage() {
     const { deleteComment } = useDeleteComment()
     const [commentList, setCommentList] = useState<Comment[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [deletingId, setDeletingId] = useState<string | null>(null)
     const formRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
@@ -49,11 +50,14 @@ export default function CommentsPage() {
 
     const commentDeleteHandler = async (commentId: string) => {
         try {
+            setDeletingId(commentId)
             await deleteComment(snippetId!, commentId)
             setCommentList(prev => prev.filter(comment => comment._id !== commentId))
             showToast('Comment deleted!', 'success')
         } catch (err) {
             showToast((err as Error).message || 'Failed to delete comment!', 'error')
+        } finally {
+            setDeletingId(null)
         }
     }
 
@@ -118,9 +122,10 @@ export default function CommentsPage() {
                                         {userId === creatorId ? (
                                             <div className="flex space-x-2">
                                                 <button
-                                                    className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 active:scale-95 transition duration-200"
+                                                    disabled={deletingId === _id}
+                                                    className="bg-red-500 text-white text-xs px-3 py-1 rounded-md hover:bg-red-600 active:scale-95 transition duration-200 disabled:opacity-50"
                                                     onClick={() => commentDeleteHandler(_id)}>
-                                                    Delete
+                                                    {deletingId === _id ? 'Deleting...' : 'Delete'}
                                                 </button>
                                             </div>
                                         ) : null}

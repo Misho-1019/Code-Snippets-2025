@@ -47,6 +47,13 @@ export default function SnippetDetails() {
         document.title = snippet ? `${snippet.title} — Code Snippet` : error ? 'Snippet not found — Code Snippet' : 'Code Snippet'
     }, [snippet, error])
 
+    useEffect(() => {
+        if (snippet) {
+            document.querySelector('meta[property="og:title"]')?.setAttribute('content', snippet.title)
+            document.querySelector('meta[property="og:description"]')?.setAttribute('content', snippet.description)
+        }
+    }, [snippet])
+
     if (isLoading) return <SkeletonDetails />
     if (error || !snippet) return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-surface-900 dark:to-surface-800 gap-3">
