@@ -11,6 +11,7 @@ interface CodeEditorProps {
     language?: string;
     readOnly?: boolean;
     className?: string;
+    isDark?: boolean;
 }
 
 const langMap: Record<string, () => any> = {
@@ -33,7 +34,7 @@ function getExtension(language?: string) {
     return ext ? [ext()] : [];
 }
 
-export default function CodeEditor({ value, onChange, language, readOnly, className }: CodeEditorProps) {
+export default function CodeEditor({ value, onChange, language, readOnly, className, isDark }: CodeEditorProps) {
     return (
         <CodeMirror
             value={value}
@@ -41,9 +42,9 @@ export default function CodeEditor({ value, onChange, language, readOnly, classN
             extensions={getExtension(language)}
             readOnly={readOnly}
             basicSetup
+            theme={isDark ? 'dark' : 'light'}
             className={`rounded-md overflow-hidden border border-gray-300 dark:border-surface-600 ${className || ""}`}
             style={{ fontSize: "0.875rem" }}
-            theme="light"
         />
     );
 }

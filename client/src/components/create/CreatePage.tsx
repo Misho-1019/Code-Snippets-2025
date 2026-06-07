@@ -8,12 +8,19 @@ import { showToast } from "../../utils/toastUtils";
 import Breadcrumbs from "../Breadcrumbs";
 import TagInput from "../catalog/TagInput";
 import CodeEditor from "../CodeEditor";
+import { useThemeContext } from "../../context/ThemeContext";
 
-const schema = yup.object({
-    title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
-    description: yup.string().required('Description is required'),
-    language: yup.string().required('Language is required'),
-})
+function useUnsavedChanges(dirty: boolean) {
+    useEffect(() => {
+        const handler = (e: BeforeUnloadEvent) => {
+            if (dirty) {
+                e.preventDefault()
+            }
+        }
+        window.addEventListener('beforeunload', handler)
+        return () => window.removeEventListener('beforeunload', handler)
+    }, [dirty])
+}
 
 interface CreateForm {
     title: string
@@ -25,9 +32,12 @@ export default function CreateSnippet() {
     const navigate = useNavigate();
     const { create } = useCreateSnippet()
     const { tags: suggestedTags } = useTags()
+    const { isDark } = useThemeContext()
     const [tags, setTags] = useState<string[]>([])
     const [visibility, setVisibility] = useState('private')
     const [code, setCode] = useState('')
+    const dirty = code.trim() !== '' || tags.length > 0
+    useUnsavedChanges(dirty)
 
     useEffect(() => {
         document.title = 'Create Snippet — Code Snippet'
@@ -89,7 +99,7 @@ export default function CreateSnippet() {
                         <CodeEditor
                             value={code}
                             onChange={setCode}
-                            language={undefined}
+                            isDark={isDark}
                         />
                     </div>
 

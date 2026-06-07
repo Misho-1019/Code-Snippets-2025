@@ -10,10 +10,12 @@ import Spinner from "../Spinner";
 import SkeletonDetails from "../SkeletonDetails";
 import Breadcrumbs from "../Breadcrumbs";
 import ConfirmModal from "../ConfirmModal";
+import { useThemeContext } from "../../context/ThemeContext";
 
 export default function SnippetDetails() {
     const navigate = useNavigate()
     const { userId, isAuthenticated } = useAuth()
+    const { isDark } = useThemeContext()
     const { snippetId } = useParams<{ snippetId: string }>()
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { deleteSnippet } = useDeleteSnippet()
@@ -27,6 +29,7 @@ export default function SnippetDetails() {
     const [isDeleting, setIsDeleting] = useState(false)
     const [isLiking, setIsLiking] = useState(false)
     const [isForking, setIsForking] = useState(false)
+    const [isExporting, setIsExporting] = useState(false)
     const deleteBtnRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
@@ -111,6 +114,40 @@ export default function SnippetDetails() {
         }
     }
 
+    const exportToGist = async () => {
+        const token = window.prompt('Enter your GitHub personal access token (needs "gist" scope):')
+        if (!token) return
+        try {
+            setIsExporting(true)
+            const res = await fetch('https://api.github.com/gists', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    description: snippet.description,
+                    public: snippet.visibility === 'public',
+                    files: {
+                        [`${snippet.title.replace(/\s+/g, '-')}.${snippet.language?.toLowerCase() === 'javascript' ? 'js' : snippet.language?.toLowerCase() || 'txt'}`]: {
+                            content: snippet.code,
+                        },
+                    },
+                }),
+            })
+            if (res.ok) {
+                const gist = await res.json()
+                showToast(`Gist created! ${gist.html_url}`, 'success')
+            } else {
+                showToast('Failed to create gist. Check your token.', 'error')
+            }
+        } catch {
+            showToast('Failed to create gist', 'error')
+        } finally {
+            setIsExporting(false)
+        }
+    }
+
     const copyCode = async () => {
         try {
             await navigator.clipboard.writeText(snippet.code)
@@ -161,6 +198,7 @@ export default function SnippetDetails() {
                     value={snippet.code}
                     language={snippet.language}
                     readOnly
+                    isDark={isDark}
                 />
             </div>
 
@@ -194,6 +232,13 @@ export default function SnippetDetails() {
                             {isForking ? 'Forking...' : 'Fork'}
                         </button>
                     )}
+                    <button
+                        onClick={exportToGist}
+                        disabled={isExporting}
+                        className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-surface-600 rounded-md hover:bg-gray-50 dark:hover:bg-surface-700 transition-colors disabled:opacity-50"
+                    >
+                        {isExporting ? 'Exporting...' : 'Gist'}
+                    </button>
                     <Link to={`/snippets/${snippetId}/comments`} className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors">
                         Comments
                     </Link>

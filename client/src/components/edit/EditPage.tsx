@@ -10,6 +10,17 @@ import Spinner from "../Spinner";
 import Breadcrumbs from "../Breadcrumbs";
 import TagInput from "../catalog/TagInput";
 import CodeEditor from "../CodeEditor";
+import { useThemeContext } from "../../context/ThemeContext";
+
+function useUnsavedChanges(dirty: boolean) {
+    useEffect(() => {
+        const handler = (e: BeforeUnloadEvent) => {
+            if (dirty) e.preventDefault()
+        }
+        window.addEventListener('beforeunload', handler)
+        return () => window.removeEventListener('beforeunload', handler)
+    }, [dirty])
+}
 
 const schema = yup.object({
     title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
@@ -30,9 +41,12 @@ export default function EditSnippet() {
     const { snippet, isLoading, error } = useSnippet(snippetId || '')
     const { edit } = useEditSnippet()
     const { tags: suggestedTags } = useTags()
+    const { isDark } = useThemeContext()
     const [tags, setTags] = useState<string[]>(snippet?.tags || [])
     const [visibility, setVisibility] = useState<string>(snippet?.visibility || 'private')
     const [code, setCode] = useState('')
+    const dirty = snippet ? (code !== snippet.code || tags.join(',') !== (snippet.tags || []).join(',') || visibility !== (snippet.visibility || 'private')) : false
+    useUnsavedChanges(dirty)
 
     useEffect(() => {
         document.title = snippet ? `Edit ${snippet.title} — Code Snippet` : error ? 'Error loading snippet — Code Snippet' : 'Code Snippet'
@@ -113,7 +127,7 @@ export default function EditSnippet() {
                     <CodeEditor
                         value={code}
                         onChange={setCode}
-                        language={undefined}
+                        isDark={isDark}
                     />
                 </div>
 
