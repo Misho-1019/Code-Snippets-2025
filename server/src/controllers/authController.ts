@@ -37,7 +37,7 @@ authController.post('/register', isGuest, validate(registerSchema), async (req: 
         res.cookie('auth', result.token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
         })
 
         res.status(201).json(result)
@@ -78,7 +78,7 @@ authController.post('/login', isGuest, validate(loginSchema), async (req: Reques
         res.cookie('auth', result.token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
         })
 
         res.status(200).json(result)

@@ -14,7 +14,7 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction):
             const token = generateToken()
             res.cookie(CSRF_COOKIE_NAME, token, {
                 httpOnly: false,
-                sameSite: 'strict',
+                sameSite: 'none',
                 secure: process.env.NODE_ENV === 'production',
                 path: '/',
             })
