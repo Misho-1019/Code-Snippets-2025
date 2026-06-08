@@ -27,6 +27,7 @@ for (const envVar of requiredEnvVars) {
 }
 
 const app = express();
+app.set('trust proxy', 1)
 
 app.use(helmet())
 app.use(morgan('dev'))

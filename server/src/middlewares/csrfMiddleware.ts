@@ -6,8 +6,8 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction):
         return
     }
 
-    const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173'
-    const origin = req.headers['origin']
+    const allowedOrigin = (process.env.CORS_ORIGIN || 'http://localhost:5173').replace(/\/$/, '')
+    const origin = req.headers['origin']?.replace(/\/$/, '')
 
     if (!origin || origin !== allowedOrigin) {
         res.status(403).json({ message: 'Invalid or missing origin' })
