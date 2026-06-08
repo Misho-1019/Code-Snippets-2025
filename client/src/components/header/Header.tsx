@@ -7,12 +7,11 @@ import { FiSun, FiMoon } from "react-icons/fi";
 function UserAvatar({ email, username }: { email: string; username: string }) {
     const initials = (username || email).slice(0, 2).toUpperCase()
     return (
-        <span
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white text-sm font-semibold"
-            title={email}
-        >
-            {initials}
-        </span>
+        <Link to={`/u/${username}`} title={email}>
+            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white text-sm font-semibold">
+                {initials}
+            </span>
+        </Link>
     )
 }
 
