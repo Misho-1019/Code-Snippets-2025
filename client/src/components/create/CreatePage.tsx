@@ -28,6 +28,12 @@ interface CreateForm {
     language: string
 }
 
+const schema = yup.object({
+    title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
+    description: yup.string().required('Description is required'),
+    language: yup.string().required('Language is required'),
+})
+
 export default function CreateSnippet() {
     const navigate = useNavigate();
     const { create } = useCreateSnippet()

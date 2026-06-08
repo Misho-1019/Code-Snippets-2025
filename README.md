@@ -65,6 +65,17 @@ The system is designed to simulate a **real developer tool**, where code is trea
 
 ---
 
+## 🌐 Live Demo
+
+- **Frontend (Vercel):** https://code-snippets-2025.vercel.app
+- **Backend API (Render):** https://code-snippets-2025.onrender.com
+
+> ⚠️ Note:
+> This is a portfolio deployment.
+> The backend is hosted on a free tier (Render), so cold starts may occur after inactivity.
+
+---
+
 ## 🖼️ Screenshots
 
 ### 1️⃣ Home Page & Latest Snippets
