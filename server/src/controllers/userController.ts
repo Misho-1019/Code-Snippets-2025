@@ -12,14 +12,41 @@ userController.get('/:username', async (req: Request, res: Response) => {
             return
         }
 
-        const snippets = await Snippet.find({ creator: user._id, visibility: 'public' })
-            .sort({ createdAt: -1 })
+        const sortMap: Record<string, Record<string, 1 | -1>> = {
+            newest: { createdAt: -1 },
+            oldest: { createdAt: 1 },
+            alpha: { title: 1 },
+        }
+        const sortBy = (req.query.sort as string) || 'newest'
+        const sort = sortMap[sortBy] || { createdAt: -1 }
+
+        const filterLang = (req.query.language as string) || ''
+
+        const query: Record<string, unknown> = { creator: user._id, visibility: 'public' }
+        if (filterLang) query.language = filterLang
+
+        const snippets = await Snippet.find(query).sort(sort)
+
+        const totalLikesAgg = await Snippet.aggregate([
+            { $match: { creator: user._id, visibility: 'public' } },
+            { $unwind: { path: '$likes', preserveNullAndEmptyArrays: false } },
+            { $count: 'total' },
+        ])
+
+        const languageCounts = await Snippet.aggregate([
+            { $match: { creator: user._id, visibility: 'public' } },
+            { $group: { _id: '$language', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+        ])
 
         res.json({
             _id: user._id,
             username: user.username,
             joinedAt: user.createdAt,
             publicSnippets: snippets.length,
+            totalLikes: totalLikesAgg[0]?.total || 0,
+            topLanguage: languageCounts[0]?._id || null,
+            languageCounts,
             snippets,
         })
     } catch (err) {
