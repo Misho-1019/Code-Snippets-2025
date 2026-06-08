@@ -80,19 +80,19 @@ The system is designed to simulate a **real developer tool**, where code is trea
 
 ### 1️⃣ Home Page & Latest Snippets
 
-![Home Page](views/screenshot-home.png)
+![Home Page](views/Screenshot%202026-06-08%20181003.png)
 
 ### 2️⃣ Catalog & Search
 
-![Catalog Page](views/screenshot-catalog.png)
+![Catalog Page](views/Screenshot%202026-06-08%20181017.png)
 
 ### 3️⃣ Snippet Details & Code Editor
 
-![Details Page](views/screenshot-details.png)
+![Details Page](views/Screenshot%202026-06-08%20232357.png)
 
 ### 4️⃣ Create / Edit Snippet
 
-![Create Page](views/screenshot-create.png)
+![Create Page](views/Screenshot%202026-06-08%20190637.png)
 
 ---
 
