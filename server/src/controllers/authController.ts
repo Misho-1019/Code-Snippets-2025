@@ -143,7 +143,11 @@ authController.get('/me', isAuth, async (req: Request, res: Response) => {
  */
 authController.get('/logout', isAuth, (req: Request, res: Response) => {
     try {
-        res.clearCookie('auth')
+        res.clearCookie('auth', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+        })
         res.status(200).json({ message: 'Logout successfully!' })
     } catch (error) {
         console.error(error instanceof Error ? error.message : error);
